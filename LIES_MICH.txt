@@ -1,0 +1,9 @@
+Arcade Party - Server starten
+
+1. Lade von nodejs.org/en/download die "Windows Binary (.zip)" (x64).
+2. Entpacke daraus NUR die Datei node.exe in diesen Ordner (neben start.bat).
+3. Doppelklick auf start.bat. Das Fenster offen lassen.
+4. Am Rechner: http://localhost:3000
+   Handys im selben WLAN: Adresse aus dem Fenster oder QR-Code in der Lobby.
+
+Bei der Windows-Firewall-Frage: Zugriff fuer private Netzwerke erlauben.
