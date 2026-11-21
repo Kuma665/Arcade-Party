@@ -154,7 +154,7 @@ body.th4::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none
 
 <section id="lobby" class="on">
  <h1>Arcade Party</h1>
- <div class="join"><div id="qr"></div><div><div>Handys: QR-Code scannen (braucht den Server).</div><small id="qu">Handys: „node server.js“ starten und die Adresse öffnen. Mit Controller oder Tastatur geht es auch ohne.</small></div></div>
+ <div class="join"><div id="qr"></div><div><div>Handys: QR-Code scannen.</div><small id="qu">Verbinde… Mit Controller oder Tastatur geht es auch ohne.</small></div></div>
  <div class="grid8" id="slots"></div>
  <div id="tmc" style="min-height:1.4em;line-height:1.4em;visibility:hidden;color:var(--mu);font-size:1.05em;text-align:center">&nbsp;</div>
  <div id="legend"></div>
@@ -373,8 +373,8 @@ function render(){
 }
 const NET=location.protocol.startsWith('http');
 function push(){list().forEach(push1)}
-function push1(p){if(!NET||fixed(p.id))return;
- fetch('/to',{method:'POST',body:JSON.stringify({id:p.id,msg:{slot:p.slot,name:p.name,col:COL[p.co],pts:p.pts,rd:p.rd,screen:st,tm:p.tm||0,cr:p.crown?1:0,tc:p.tm&&TMON?TC[p.tm-1]:'',mates:TMON&&p.tm?list().filter(q=>q!==p&&q.tm===p.tm).map(q=>q.name):[],rm:st==='res'&&!T?1:0,ro:st==='bo'&&window.boRole?boRole(p.id):0,hv:HV[p.id]|0,gv:GV.n,gp:GV.p,rv:st==='res'?RV[p.id]||0:0,hg:HG?(HG.ok[p.id]?2:1):0,ot:st==='rc'&&RC&&RC.pl.some(q=>q.p===p&&q.out)?1:0,bk:st==='menu'&&BK?(BK===p.id?2:1):0,tip:st==='trn'&&T?(()=>{const t=tipCand()[tipIdx(p)];return{n:t?t.name:'',ok:TIP.pick[p.id]!=null?1:0}})():0}})}).catch(()=>{})}
+function push1(p){if(fixed(p.id))return;
+ sendPad(p.id,{slot:p.slot,name:p.name,col:COL[p.co],pts:p.pts,rd:p.rd,screen:st,tm:p.tm||0,cr:p.crown?1:0,tc:p.tm&&TMON?TC[p.tm-1]:'',mates:TMON&&p.tm?list().filter(q=>q!==p&&q.tm===p.tm).map(q=>q.name):[],rm:st==='res'&&!T?1:0,ro:st==='bo'&&window.boRole?boRole(p.id):0,hv:HV[p.id]|0,gv:GV.n,gp:GV.p,rv:st==='res'?RV[p.id]||0:0,hg:HG?(HG.ok[p.id]?2:1):0,ot:st==='rc'&&RC&&RC.pl.some(q=>q.p===p&&q.out)?1:0,bk:st==='menu'&&BK?(BK===p.id?2:1):0,tip:st==='trn'&&T?(()=>{const t=tipCand()[tipIdx(p)];return{n:t?t.name:'',ok:TIP.pick[p.id]!=null?1:0}})():0})}
 let tqOk=false,lastG=null,resT=0;
 function readySnd(on){beep(cfgG.sfx*.6,0,on?698:440)}
 function leaveSnd(){beep(cfgG.sfx,0,659);setTimeout(()=>beep(cfgG.sfx,0,392),110)}
@@ -390,7 +390,7 @@ function checkReady(){const l=list();if(st==='lobby'&&l.length&&l.every(p=>p.rd)
 const LEFTP={},GPOFF={},gpt={};
 function leaveP(id){const p=P[id];if(!p||st!=='lobby'||cdT||(ned&&ned.id===id))return;
  LEFTP[id]=p.pts;
- if(!fixed(id)&&NET)fetch('/to',{method:'POST',body:JSON.stringify({id,msg:{lf:1}})}).catch(()=>{});
+ if(!fixed(id))sendPad(id,{lf:1});
  if(/^gp/.test(id))GPOFF[id]=1;
  delete P[id];if(BK===id)bkNo();leaveSnd();render();push();checkReady()}
 function onMsg(m){let p=P[m.id];
@@ -522,8 +522,35 @@ $('fl').onload=render;
 {const s=$('lobby'),w=document.createElement('div');w.id='lw';[...s.children].forEach(c=>{if(c.id!=='tq')w.appendChild(c)});s.insertBefore(w,s.firstChild);
  const fit=()=>{if(!w.offsetHeight)return;const cs=getComputedStyle(s),av=s.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),k=Math.max(.4,Math.min(1,av/w.offsetHeight));w.style.transform=k<1?'scale('+k.toFixed(3)+')':'none'};
  new ResizeObserver(fit).observe(w);addEventListener('resize',fit);fit()}
- if(NET){const es=new EventSource('/events');es.onmessage=e=>{try{onMsg(JSON.parse(e.data))}catch(_){}};
-fetch('/info').then(r=>r.json()).then(j=>{new QRCode($('qr'),{text:j.url,width:150,height:150});new QRCode($('mqc'),{text:j.url,width:84,height:84});mqOk=1;$('mq').classList.toggle('on',st==='menu');$('qr').style.display='block';$('qu').textContent=j.url}).catch(()=>{})}
+/* Handy-Pads: lokaler Server (server.js, /events + /to) als Notlösung, sonst direkt per WebRTC (PeerJS) über einen Raum-Code. */
+/* var statt let: push1() kann schon vor dieser Zeile laufen */
+var SRV=0,PEER=null,ROOM='',pTry=0,pTmr=0,PC={},PL={};const PJS='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',GHPAD='https://kuma665.github.io/Arcade-Party/pad.html',RA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function sendPad(id,msg){if(SRV){fetch('/to',{method:'POST',body:JSON.stringify({id,msg})}).catch(()=>{});return}
+ PL[id]=msg;const c=PC[id];if(c&&c.open)try{c.send(msg)}catch(_){}}
+function showJoin(url,txt){$('qr').innerHTML='';$('mqc').innerHTML='';new QRCode($('qr'),{text:url,width:150,height:150});new QRCode($('mqc'),{text:url,width:84,height:84});mqOk=1;$('mq').classList.toggle('on',st==='menu');$('qr').style.display='block';$('qu').textContent=txt||url}
+function srvStart(j){SRV=1;const es=new EventSource('/events');es.onmessage=e=>{try{onMsg(JSON.parse(e.data))}catch(_){}};showJoin(j.url)}
+function newRoom(){let c='';for(let i=0;i<4;i++)c+=RA[Math.random()*RA.length|0];try{localStorage.apRoom=c}catch(_){}return c}
+function padUrl(code){return (/github\.io$/.test(location.hostname)?new URL('pad.html',location.href).href:GHPAD)+'?room='+code}
+function peerStart(){if(typeof Peer!=='undefined')return peerOpen();
+ $('qu').textContent='Verbinde…';const s=document.createElement('script');s.src=PJS;s.onload=()=>peerOpen();s.onerror=()=>{$('qu').textContent='Handys: keine Internetverbindung. Mit Controller oder Tastatur geht es auch ohne.'};document.head.appendChild(s)}
+function peerLater(f,ms){clearTimeout(pTmr);pTmr=setTimeout(f,ms)}
+function peerOpen(){let code='';try{code=localStorage.apRoom||''}catch(_){}if(!/^[A-Z2-9]{4}$/.test(code))code=newRoom();ROOM=code;
+ const pr=new Peer('arcadeparty-'+code.toLowerCase(),{debug:0});PEER=pr;
+ pr.on('open',()=>{if(PEER!==pr)return;pTry=0;showJoin(padUrl(code),'Raum '+code+' · '+padUrl(code).replace(/^https?:\/\//,'').replace(/\?.*/,''))});
+ pr.on('connection',c=>{c.on('data',m=>padData(c,m));c.on('close',()=>{for(const k in PC)if(PC[k]===c)delete PC[k]});c.on('error',()=>{})});
+ pr.on('disconnected',()=>{if(PEER===pr&&!pr.destroyed)peerLater(()=>{if(PEER===pr&&!pr.destroyed&&pr.disconnected)try{pr.reconnect()}catch(_){}},2000)});
+ pr.on('error',e=>{if(PEER!==pr)return;const t=e&&e.type;
+  if(t==='unavailable-id'){PEER=null;try{pr.destroy()}catch(_){}
+   /* Nach Neuladen ist die alte ID beim Vermittler evtl. noch kurz belegt: erst ein paar Mal warten, dann neuer Code */
+   if(++pTry>4){try{localStorage.removeItem('apRoom')}catch(_){}pTry=0}peerLater(peerOpen,2500);return}
+  if(t==='browser-incompatible'){$('qu').textContent='Handys: dieser Browser kann kein WebRTC.';return}
+  if(pr.disconnected&&!pr.destroyed)peerLater(()=>{if(PEER===pr&&!pr.destroyed)try{pr.reconnect()}catch(_){}},5000)})}
+function padData(c,m){if(!m||typeof m!=='object')return;if(m.pg!=null)try{c.send({pg:+m.pg||0})}catch(_){}
+ if(typeof m.id!=='string'||!m.id||m.id.length>=20||fixed(m.id))return;
+ if(PC[m.id]!==c){PC[m.id]=c;if(PL[m.id])try{c.send(PL[m.id])}catch(_){}}
+ if(m.b!=null)onMsg({id:m.id,name:String(m.name||'').slice(0,10),b:m.b|0})}
+{if(location.protocol.startsWith('http'))fetch('/info',{cache:'no-store'}).then(r=>r.ok?r.json():Promise.reject()).then(j=>{if(!j||!j.url)throw 0;srvStart(j)}).catch(peerStart);else peerStart()
+}
 setInterval(()=>{let ch=false;for(const id in P)if(!fixed(id)&&Date.now()-P[id].seen>30000&&st!=='demo'&&st!=='bm'&&st!=='sm'&&st!=='rc'){delete P[id];ch=true}if(ch){leaveSnd();render();checkReady()}},2000);
 const gpb={},gpr={};
 const rStick=g=>g.mapping==='standard'?[g.axes[2]||0,g.axes[3]||0]:[0,0];
