@@ -150,6 +150,13 @@ body.th4{--bg:#0a0820;--tx:#fff8e6;--mu:#d8c9ff;--ln:#6b4fd1;--gold:#ffd23f;back
 body.th4 h1{text-shadow:5px 5px 0 #ff2d95,10px 10px 0 #ffd23f}body.th4 #dc{text-shadow:6px 6px 0 #ff2d95}
 body.th4::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:radial-gradient(circle,#ffd23f 0 2px,#0000 3px),radial-gradient(circle,#ff2d95 0 2px,#0000 3px),radial-gradient(circle,#fff 0 1.5px,#0000 2.5px),radial-gradient(circle,#18c9e8 0 2px,#0000 3px);background-size:170px 190px,230px 210px,110px 130px,290px 250px;background-position:0 0,60px 80px,30px 40px,120px 20px;animation:tw 2.6s ease-in-out infinite alternate}
 @keyframes tw{from{opacity:.25}to{opacity:.95}}
+/* Handy-Layout (22.11.2026): Touch-Leiste oben links statt über Überschriften; in Tipp-Menüs keine Touch-Tasten; Menüs passen sich der Höhe an; leere zweite Slot-Reihe flach */
+#tpc{left:max(8px,env(safe-area-inset-left,0px));transform:none}
+body.apmenu #tp{display:none}
+.fw{display:flex;flex-direction:column;align-items:center;gap:2.2vh;width:100%;transform-origin:top center}
+.rw .rwa{display:inline-block;padding:0 .35em;cursor:pointer}
+.grid8:not(:has(.sl.in:nth-child(n+5))) .sl:nth-child(n+5){min-height:60px;padding:4px}
+.grid8:not(:has(.sl.in:nth-child(n+5))) .sl:nth-child(n+5) .ph{display:none}
 </style></head><body><div id="mq"><div id="mqc"></div><span>Handys: mitspielen</span></div><div id="emf"></div><div id="ew"></div>
 
 <section id="lobby" class="on">
@@ -364,7 +371,7 @@ function render(){
  $('tiles').innerHTML=GAMES.map((g,i)=>`<div class="tile ${i===cur?'sel':''}" onclick="cur=${i};tileA(${i})" style="cursor:pointer"><span>${g[2]}</span><b>${g[0]}</b><small>${g[1]}</small>${i&&REC[i]?`<small class="rc">🏆 ${REC[i].v} ${unitOf(i)}</small>`:''}</div>`).join('');
  {const g=[[],[],[],[]];l.forEach(p=>{if(p.tm)g[p.tm-1].push(p.pts)});const t=$('tpts'),r=TMON?g.map((a,i)=>a.length?{i,v:Math.round(a.reduce((x,y)=>x+y,0)/a.length)}:null).filter(Boolean).sort((x,y)=>y.v-x.v):[];t.textContent=r.map(x=>TG[x.i]+' '+TN[x.i]+' '+x.v).join(' · ');t.style.display=r.length?'':'none'}
  $('board').innerHTML=[...l].sort((a,b)=>b.pts-a.pts).map(p=>`<div class="bp" style="--c:${COL[p.co]}">${av(p)}${p.crown?'👑 ':''}${esc(p.name)}${tmb(p)} <b>${p.pts}</b></div>`).join('');
- const row=(i,l,v,go)=>`<div class="rw ${i===rc?'sel':''} ${go?'go':''}" onclick="rowClick(${i})"><span>${l}</span>${v!=null?`<b>◀ ${typeof v==='number'?`<i class="vb"><u style="width:${v}%"></u></i>${v}%`:v} ▶</b>`:''}</div>`;
+ const row=(i,l,v,go)=>`<div class="rw ${i===rc?'sel':''} ${go?'go':''}" onclick="rowClick(${i})"><span>${l}</span>${v!=null?`<b><span class="rwa" onclick="rowLR(event,${i},'l')">◀</span> ${typeof v==='number'?`<i class="vb"><u style="width:${v}%"></u></i>${v}%`:v} <span class="rwa" onclick="rowLR(event,${i},'r')">▶</span></b>`:''}</div>`;
  $('setrows').innerHTML=row(0,'Musik',cfgG.mus)+row(1,'Soundeffekte',cfgG.sfx)+row(2,'Design',THEMES[cfgG.th|0])+row(3,'Vibration',cfgG.vib?'An':'Aus')+row(4,'Zurück',null,1);
  if(pre){const g=GAMES[pre.i];$('pt').textContent=g[2]+' '+g[0];$('prerows').innerHTML=g.opts.map((o,i)=>row(i,o.n,o.v[gset[pre.i][o.k]])).join('')+row(g.opts.length,'Los!',null,1);const rr=REC[recKey(pre.i)];$('prec').textContent=pre.i===1||pre.i===2?'':pre.i===11?'Wer nach allen Runden die meisten Punkte hat, gewinnt das Turnier.':rr?'🏆 Rekord für diese Einstellung: '+rr.v+' '+unitOf(pre.i)+' ('+rr.who+')':'Noch kein Rekord für diese Einstellung'}
  if(st==='hs')renderHS();
@@ -418,6 +425,7 @@ function mv(dx,dy){const R=Math.ceil(NN/NC),len=r=>Math.min(NC,NN-r*NC);let r=Ma
  if(dx)c=(c+dx+len(r))%len(r);if(dy){r=(r+dy+R)%R;c=Math.min(c,len(r)-1)}cur=r*NC+c;render()}
 function tileA(i){if(i===10){show('hs')}else if(i===9){rc=0;show('set')}else if((i<8||i===11)&&GAMES[i].opts){pre={i};rc=GAMES[i].opts.length;show('pre')}else launch(i)}
 function rowClick(i){rc=i;(st==='set'?setIn:preIn)('a')}
+function rowLR(e,i,k){e.stopPropagation();rc=i;(st==='set'?setIn:preIn)(k)}
 function setIn(k){const key=['mus','sfx'][rc];
  if(k==='u')rc=(rc+4)%5;else if(k==='d')rc=(rc+1)%5;
  else if(k==='b'||(k==='a'&&rc===4)){saveC();return show('menu')}
@@ -556,7 +564,7 @@ setInterval(()=>{let ch=false;for(const id in P)if(!fixed(id)&&Date.now()-P[id].
 /* ===== Grundausstattung (wie in den anderen Spielen): Ton aus beim Verlassen, Stumm-Knopf, Fehleranzeige, Wake Lock,
    Zurück-Taste, Vollbild, Dreh-Hinweis, Mauszeiger ausblenden, Version + Credits. Texte zentral in TX.
    var statt let/const: pollPads() und push1() laufen schon, bevor dieser Block erreicht ist. ===== */
-var VER='v2026-11-21';
+var VER='v2026-11-22';
 var TX={mute:'Ton an/aus (M)',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'<b>Arcade Party</b> '+VER+'<br>Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts)<br>QR-Code: qrcodejs (davidshimjs)<br>Handy-Verbindung: PeerJS (peerjs.com)<br><small>Tippen zum Schließen</small>'};
 var GAMEST=['demo','bm','bo','sm','rc','flood'],AUDC=[],apFoc=true,apMT=0,apFsOff=false,apL3={},apWl=null,apHist=0,apErrN=0;
@@ -619,12 +627,16 @@ addEventListener('popstate',()=>{try{history.pushState({ap:1},'')}catch(_){}
 addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(!e.repeat&&(e.key==='m'||e.key==='M'))apMute()});
 /* Dreh-Hinweis: hochkant am Handy → laufendes Spiel pausieren */
 if(TOUCHDEV){const mq=matchMedia('(orientation:portrait)'),f=()=>{if(mq.matches)apPause()};if(mq.addEventListener)mq.addEventListener('change',f);else mq.addListener(f)}
+/* Menüseiten an die Bildschirmhöhe anpassen (wie die Lobby): Inhalt in .fw, bei Platzmangel verkleinert */
+['menu','set','pre','hs'].forEach(id=>{const s=$(id),w=document.createElement('div');w.className='fw';[...s.children].forEach(c=>w.appendChild(c));s.appendChild(w);
+ const fit=()=>{if(!w.offsetHeight)return;const cs=getComputedStyle(s),av=s.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),k=Math.max(.4,Math.min(1,av/w.offsetHeight));w.style.transform=k<1?'scale('+k.toFixed(3)+')':'none'};
+ new ResizeObserver(fit).observe(w);addEventListener('resize',fit);fit()});
 /* Als App installierbar (nur über https, also GitHub Pages) */
 if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
 /* Mauszeiger im laufenden Spiel ausblenden, bei Bewegung kurz zeigen; Stumm-Knopf nur in Menü/Pause; Version nur in Lobby/Menü */
 addEventListener('mousemove',()=>{apMT=performance.now()});
 setInterval(()=>{const g=apInGame(),h=g&&performance.now()-apMT>2000,r=document.documentElement;if(r.classList.contains('nocur')!==h){r.classList.toggle('nocur',h);try{flWin().document.documentElement.classList.toggle('nocur',h)}catch(_){}}
- $('apmu').classList.toggle('off',g);$('apver').classList.toggle('off',st!=='lobby'&&st!=='menu')},300);
+ $('apmu').classList.toggle('off',g);document.body.classList.toggle('apmenu',['menu','set','pre','hs'].includes(st));$('apver').classList.toggle('off',st!=='lobby'&&st!=='menu')},300);
  const gpb={},gpr={};
 const rStick=g=>g.mapping==='standard'?[g.axes[2]||0,g.axes[3]||0]:[0,0];
 function rsOn(g){const[x,y]=rStick(g),m=Math.hypot(x,y);if(!gpr[g.index]&&m>.6)gpr[g.index]=1;else if(gpr[g.index]&&m<.35)gpr[g.index]=0;return !!gpr[g.index]}
