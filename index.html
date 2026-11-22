@@ -155,8 +155,10 @@ body.th4::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none
 /* Spielfläche weicht den Touch-Tasten aus (--tpr = Breite pro Seite, aus apPW()) */
 #fl{left:var(--tpr,0px);width:calc(100% - 2*var(--tpr,0px))}
 body.apmenu #tp{display:none}
-.fw{display:flex;flex-direction:column;align-items:center;gap:2.2vh;width:100%;transform-origin:top center}
+.fw{display:flex;flex-direction:column;align-items:center;gap:inherit;width:100%;transform-origin:top center}
 .rw .rwa{display:inline-block;padding:0 .35em;cursor:pointer}
+.grid8.g8{grid-template-columns:repeat(8,minmax(0,1fr));width:1640px;max-width:none}
+.grid8.g8 .sl:nth-child(n+5){min-height:150px;padding:12px 8px 8px}.grid8.g8 .sl:nth-child(n+5) .ph{display:block}
 .grid8:not(:has(.sl.in:nth-child(n+5))) .sl:nth-child(n+5){min-height:60px;padding:4px}
 .grid8:not(:has(.sl.in:nth-child(n+5))) .sl:nth-child(n+5) .ph{display:none}
 </style></head><body><div id="mq"><div id="mqc"></div><span>Handys: mitspielen</span></div><div id="emf"></div><div id="ew"></div>
@@ -531,8 +533,13 @@ setInterval(()=>{if(st!=='flood'||!fg)return;let s;try{s=$('fl').contentWindow.P
 $('fl').onload=render;
 
 {const s=$('lobby'),w=document.createElement('div');w.id='lw';[...s.children].forEach(c=>{if(c.id!=='tq')w.appendChild(c)});s.insertBefore(w,s.firstChild);
- const fit=()=>{if(!w.offsetHeight)return;const cs=getComputedStyle(s),av=s.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),k=Math.max(.4,Math.min(1,av/w.offsetHeight));w.style.transform=k<1?'scale('+k.toFixed(3)+')':'none'};
- new ResizeObserver(fit).observe(w);addEventListener('resize',fit);fit()}
+/* Passt die Lobby nicht, probieren: 4 Spalten (2 Reihen) oder 8 Spalten (1 Reihe); genommen wird, was größer bleibt. Nie abschneiden (Untergrenze 0,25). */
+ const g=$('slots');let fq=0;
+ const fit=()=>{if(!w.offsetHeight)return;const cs=getComputedStyle(s),av=s.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),aw=Math.min(s.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),typeof apPW==='function'?apPW():1e9);
+  const kOf=c=>{g.classList.toggle('g8',c===8);return Math.min(1,av/w.offsetHeight,aw/Math.max(w.offsetWidth,g.offsetWidth))};
+  const k4=kOf(4),k8=k4<1?kOf(8):0,c=k8>k4+.02?8:4,k=Math.max(.25,c===8?k8:(k8?kOf(4):k4));w.style.transform=k<1?'scale('+k.toFixed(3)+')':'none'};
+ const fitQ=()=>{if(fq)return;fq=1;requestAnimationFrame(()=>{fq=0;fit()})};
+ new ResizeObserver(fitQ).observe(w);addEventListener('resize',fitQ);fit()}
 /* Handy-Pads: lokaler Server (server.js, /events + /to) als Notlösung, sonst direkt per WebRTC (PeerJS) über einen Raum-Code. */
 /* var statt let: push1() kann schon vor dieser Zeile laufen */
 var SRV=0,PEER=null,ROOM='',pTry=0,pTmr=0,PC={},PL={};const PJS='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js',GHPAD='https://kuma665.github.io/Arcade-Party/pad.html',RA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -566,7 +573,7 @@ setInterval(()=>{let ch=false;for(const id in P)if(!fixed(id)&&Date.now()-P[id].
 /* ===== Grundausstattung (wie in den anderen Spielen): Ton aus beim Verlassen, Stumm-Knopf, Fehleranzeige, Wake Lock,
    Zurück-Taste, Vollbild, Dreh-Hinweis, Mauszeiger ausblenden, Version + Credits. Texte zentral in TX.
    var statt let/const: pollPads() und push1() laufen schon, bevor dieser Block erreicht ist. ===== */
-var VER='v2026-11-22b';
+var VER='v2026-11-22c';
 var TX={mute:'Ton an/aus (M)',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'<b>Arcade Party</b> '+VER+'<br>Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts)<br>QR-Code: qrcodejs (davidshimjs)<br>Handy-Verbindung: PeerJS (peerjs.com)<br><small>Tippen zum Schließen</small>'};
 var GAMEST=['demo','bm','bo','sm','rc','flood'],AUDC=[],apFoc=true,apMT=0,apFsOff=false,apL3={},apWl=null,apHist=0,apErrN=0;
@@ -630,8 +637,8 @@ addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;if
 /* Dreh-Hinweis: hochkant am Handy → laufendes Spiel pausieren */
 if(TOUCHDEV){const mq=matchMedia('(orientation:portrait)'),f=()=>{if(mq.matches)apPause()};if(mq.addEventListener)mq.addEventListener('change',f);else mq.addListener(f)}
 /* Menüseiten an die Bildschirmhöhe anpassen (wie die Lobby): Inhalt in .fw, bei Platzmangel verkleinert */
-['menu','set','pre','hs'].forEach(id=>{const s=$(id),w=document.createElement('div');w.className='fw';[...s.children].forEach(c=>w.appendChild(c));s.appendChild(w);
- const fit=()=>{if(!w.offsetHeight)return;const cs=getComputedStyle(s),av=s.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),k=Math.max(.4,Math.min(1,av/w.offsetHeight));w.style.transform=k<1?'scale('+k.toFixed(3)+')':'none'};
+['menu','set','pre','hs','res','trn','tfin'].forEach(id=>{const s=$(id),w=document.createElement('div');w.className='fw';[...s.children].forEach(c=>w.appendChild(c));s.appendChild(w);
+ const fit=()=>{if(!w.offsetHeight)return;const cs=getComputedStyle(s),av=s.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),k=Math.max(.25,Math.min(1,av/w.offsetHeight));w.style.transform=k<1?'scale('+k.toFixed(3)+')':'none'};
  new ResizeObserver(fit).observe(w);addEventListener('resize',fit);fit()});
 /* Breite für die Spielfläche: sind Touch-Tasten sichtbar, links/rechts deren Platz freihalten (alle 400 ms neu gemessen) */
 var apPWc=0,apPWt=0,apTpr=-1;
@@ -669,7 +676,7 @@ addEventListener('keyup',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(K
 (function(){
  const tp=$('tp'),tpc=$('tpc'),dp=$('tdp');let off=false;
  try{off=localStorage.getItem('pa_tp')==='0'}catch(e){}
- const gpAny=()=>(navigator.getGamepads?Array.from(navigator.getGamepads()):[]).some(Boolean),vis=()=>{tp.hidden=!TOUCHDEV||off||gpAny();tpc.hidden=!TOUCHDEV};vis();addEventListener('gamepadconnected',vis);addEventListener('gamepaddisconnected',()=>setTimeout(vis,50));
+ const gpAny=()=>(navigator.getGamepads?Array.from(navigator.getGamepads()):[]).some(Boolean),vis=()=>{const h=!TOUCHDEV||off||gpAny();if(tp.hidden!==h){tp.hidden=h;setTimeout(()=>dispatchEvent(new Event('resize')),0)}tpc.hidden=!TOUCHDEV};vis();addEventListener('gamepadconnected',vis);addEventListener('gamepaddisconnected',()=>setTimeout(vis,50));
  if(TOUCHDEV)$('qu').textContent='Am Handy: Touch-Tasten unten drücken, dann bist du dabei. Weitere Spieler: Controller oder Handys (QR-Code).';
  const send=()=>{onMsg({id:'kb',name:'Tastatur',b:kb|tb})};
  const put=(mask,val)=>{const n=(tb&~mask)|val;if(n===tb)return;tb=n;send()};
