@@ -205,15 +205,15 @@ body.apmenu #tp{display:none}
 <section id="rc"><canvas id="rcv"></canvas><div id="rpz"><h2 data-kx="pzH"></h2><small id="rpn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="rpr"></div></div></section>
 <div id="msg" style="display:none;position:fixed;left:4vw;right:4vw;top:3vh;z-index:9;background:#ff2d95;color:#fff;padding:14px 18px;border-radius:14px;text-align:center"></div>
 <div id="tp" hidden><div id="tdp"><i data-d="u">▲</i><i data-d="d">▼</i><i data-d="l">◀</i><i data-d="r">▶</i></div><button id="tbE" tabindex="-1" data-b="256">😀</button><button id="tbB" tabindex="-1" data-b="8">B</button><button id="tbA" tabindex="-1" data-b="4">A</button><button id="tbP" tabindex="-1" data-b="16">II</button></div>
-<div id="tpc" hidden><button id="tpt" tabindex="-1" title="Touch-Tasten an/aus" onmousedown="event.preventDefault()">🎮</button><button id="tpf" tabindex="-1" title="Vollbild" onmousedown="event.preventDefault()">⛶</button></div>
+<div id="tpc" hidden><button id="tpt" tabindex="-1" title="Touch-Tasten an/aus" onmousedown="event.preventDefault()">🎮</button></div>
 <div id="cd"><h2 data-kx="cdH"></h2><div id="cdn">3</div><button onclick="cancelCd(true)" data-kx="cdNo"></button></div>
 <div id="tq" style="position:fixed;left:0;top:0;width:100vw;height:100vh;box-sizing:border-box;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2.4vh;background:#0b0820ee;backdrop-filter:blur(4px);z-index:81;text-align:center"><h2 id="tqt">Teams ungleich</h2><div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center"><button onclick="tqGo()" data-kx="tqGo"></button><button onclick="tqNo()" data-kx="tqNo"></button></div></div>
 <iframe id="fl" allow="autoplay *; gamepad *"></iframe>
 <script>
 /* Texte zentral (für späteres Englisch): TX (Grundausstattung, Hinweise) + TX_UI (Menüs, Spielnamen) */
-var VER='v2026-11-23i';
+var VER='v2026-11-23j';
 var TX={gfxL:'Grafik',gfx:['Auto','Niedrig','Mittel','Hoch'],hOk:'{A} OK · {B} Zurück',hPz:'{A} Wählen · {B} Weiterspielen',hcOk:'Alle drücken {A}, wenn sie die Steuerung kennen',bkYes:'Ja, zurück · {A}',bkNo:'Nein · {B}',rmA:'↻ Nochmal · {A}',rmB:'Menü · {B}',tfin:'Zurück zum Menü in ein paar Sekunden · {A}',resT:'Es geht gleich weiter…',resV:'Abstimmung: {A} = nochmal · {B} = Menü · es zählt die Mehrheit',rsq:'Wirklich neu starten? · {A}',trs:' · ◀ ▶ wählen · {A} bestätigen',boSel:'◀ ▶ wählen · {A} bestätigen · {B} ändern',boHold:'🛡 {A} halten!',
- mute:'Ton an/aus (M)',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
+ mute:'Ton an/aus (M)',fs:'Vollbild an/aus',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'<b>Arcade Party</b> '+VER+'<br>Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts)<br>QR-Code: qrcodejs (davidshimjs)<br>Handy-Verbindung: PeerJS (peerjs.com)<br><small>Tippen zum Schließen</small>'};
 var TX_UI={menuH:'Was spielen wir?',setH:'⚙️ Einstellungen',pzH:'⏸ Pause',hsH:'🏆 Bestenliste',hsTot:'Gesamtwertung',hsRec:'Rekorde',resH:'Ergebnis',back:'Zurück',toLobby:'← Charakterauswahl',skip:'Überspringen',tourEnd:'Turnier beenden',cdH:'Alle bereit – los geht\'s!',cdNo:'Abbrechen (alle wieder auf „nicht bereit“)',tqGo:'Trotzdem starten',tqNo:'Teams ändern',botAdd:'+ Test-Spieler',botRem:'− Test-Spieler',
  pzGo:'Weiter',pzRs:'Neustart',pzQuit:'Zum Menü',pzDrop:'Ohne ',pzThem:'sie',pzOn:' weiter',setMus:'Musik',setSfx:'Soundeffekte',setTh:'Design',setVib:'Vibration',on:'An',off:'Aus',
@@ -583,7 +583,7 @@ setInterval(()=>{let ch=false;for(const id in P)if(!fixed(id)&&Date.now()-P[id].
 /* ===== Grundausstattung (wie in den anderen Spielen): Ton aus beim Verlassen, Stumm-Knopf, Fehleranzeige, Wake Lock,
    Zurück-Taste, Vollbild, Dreh-Hinweis, Mauszeiger ausblenden, Version + Credits. Texte zentral in TX.
    var statt let/const: pollPads() und push1() laufen schon, bevor dieser Block erreicht ist. ===== */
-var GAMEST=['demo','bm','bo','sm','rc','flood'],AUDC=[],apFoc=true,apMT=0,apFsOff=false,apL3={},apWl=null,apHist=0,apErrN=0;
+var GAMEST=['demo','bm','bo','sm','rc','flood'],AUDC=[],apFoc=true,apMT=0,apFsOff=false,apL3={},apR3={},apWl=null,apHist=0,apErrN=0;
 /* Tastensymbole (23.11.2026): richten sich nach der zuletzt benutzten Eingabe. PS → ✕ ○ □ △ (SVG), Xbox/Handy-Pad/Touch → A B X Y, Tastatur → Enter/Esc.
    Texte mit Platzhaltern {A} {B} {X} {Y}: apKx() für HTML (runde Plakette), apKxc() für Canvas. Elemente mit data-kx (TX-Schlüssel oder Text) füllt apSymRefresh(). */
 var apKind='xb';
@@ -626,16 +626,19 @@ function flWin(){try{return $('fl').contentWindow}catch(_){return null}}
 function apPaused(){if(st==='flood'){try{return flWin().eval("typeof state!=='undefined'?state:''")!=='play'}catch(_){return true}}return !!document.querySelector('section.on .on[id$="pz"]')}
 function apInGame(){return GAMEST.includes(st)&&!apPaused()}
 function apPause(){if(st==='flood'){try{flWin().pauseGame('')}catch(_){}return}const g=GS[st];if(g&&g.blur)g.blur()}
+/* Vollbild-Knopf #apfs (23.11.2026): ganz rechts, wie Stumm nur außerhalb des laufenden Spiels; Controller R3 */
+function apFsIcon(){const b=$('apfs');if(b)b.innerHTML=document.fullscreenElement?'<svg viewBox="0 0 24 24"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>':'<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>'}
+function apFsTog(){try{const d=document,e=d.documentElement;apFsOff=!!d.fullscreenElement;if(d.fullscreenElement)d.exitFullscreen().catch(()=>{});else if(e.requestFullscreen)e.requestFullscreen().then(()=>{try{screen.orientation.lock('landscape').catch(()=>{})}catch(_){}}).catch(()=>{})}catch(x){}}
 function apMute(){cfgG.mute=cfgG.mute?0:1;saveC();audSync();apMuIcon();if(!cfgG.mute)beep(cfgG.sfx,0,660)}
 function apMuIcon(){const b=$('apmu');if(b)b.textContent=cfgG.mute?'🔇':'🔊'}
 function apCred(v){const c=$('apcr');if(!c)return;c.style.display=v?'flex':'none';clearTimeout(apCred.t);if(v)apCred.t=setTimeout(()=>apCred(0),15000)}
 /* Controller: nur mit Fokus auswerten; L3 = stumm (nur Menü/Pause); jede Taste schließt die Credits */
 function apGpOk(){return !document.hidden&&document.hasFocus()}
-function apGp(gs){const cr=$('apcr'),co=cr&&cr.style.display==='flex';for(const g of gs){if(!g)continue;const l3=!!(g.buttons[10]&&g.buttons[10].pressed);if(l3&&!apL3[g.index]&&!apInGame())apMute();apL3[g.index]=l3;
+function apGp(gs){const cr=$('apcr'),co=cr&&cr.style.display==='flex';for(const g of gs){if(!g)continue;const l3=!!(g.buttons[10]&&g.buttons[10].pressed);if(l3&&!apL3[g.index]&&!apInGame())apMute();apL3[g.index]=l3;const r3=!!(g.buttons[11]&&g.buttons[11].pressed);if(r3&&!apR3[g.index]&&!apInGame())apFsTog();apR3[g.index]=r3;
  if(co&&g.buttons.some(b=>b&&b.pressed))apCred(0)}}
 {const css=document.createElement('style');css.textContent=
- '#apmu{position:fixed;top:max(8px,env(safe-area-inset-top,0px));right:max(10px,env(safe-area-inset-right,0px));z-index:80;width:max(36px,6.5vh);height:max(36px,6.5vh);padding:0;margin:0;border-radius:50%;font-size:max(17px,3.2vh);line-height:1;background:#0b0820b3;border:2px solid var(--ln);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:none;min-width:0}'+
- '#apmu.off{display:none}#apver{position:fixed;top:calc(max(8px,env(safe-area-inset-top,0px)) + max(36px,6.5vh) + 4px);right:max(10px,env(safe-area-inset-right,0px));z-index:80;font-size:max(10px,1.7vh);opacity:.45;cursor:pointer;color:var(--tx);text-shadow:0 1px 2px #000}#apver.off{display:none}'+
+ '#apmu,#apfs{position:fixed;top:max(8px,env(safe-area-inset-top,0px));right:max(10px,env(safe-area-inset-right,0px));z-index:80;width:max(36px,6.5vh);height:max(36px,6.5vh);padding:0;margin:0;border-radius:50%;font-size:max(17px,3.2vh);line-height:1;background:#0b0820b3;border:2px solid var(--ln);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:none;min-width:0}'+
+ '#apmu.off,#apfs.off,#apfs.nofs{display:none}#apmu{right:calc(max(10px,env(safe-area-inset-right,0px)) + max(36px,6.5vh) + 8px)}#apfs svg{width:55%;height:55%;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}#apver{position:fixed;top:calc(max(8px,env(safe-area-inset-top,0px)) + max(36px,6.5vh) + 4px);right:max(10px,env(safe-area-inset-right,0px));z-index:80;font-size:max(10px,1.7vh);opacity:.45;cursor:pointer;color:var(--tx);text-shadow:0 1px 2px #000}#apver.off{display:none}'+
  '#apcr{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;text-align:center;background:#0b0820ee;color:var(--tx);font-size:max(14px,3vh);line-height:1.6}'+
  '#aprot{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;text-align:center;background:#17123a;color:#fff;font-size:7vmin;line-height:1.4}'+
  '@media (orientation:portrait){html.aptouch #aprot{display:flex}}'+
@@ -648,6 +651,7 @@ function apGp(gs){const cr=$('apcr'),co=cr&&cr.style.display==='flex';for(const 
  'body.appz #tp,body.apnog #tbP{visibility:hidden}';document.head.appendChild(css);
  const mk=(t,id,h)=>{const e=document.createElement(t);e.id=id;if(h)e.innerHTML=h;document.body.appendChild(e);return e};
  const mu=mk('button','apmu');mu.tabIndex=-1;mu.title=TX.mute;mu.setAttribute('aria-label',TX.mute);mu.addEventListener('mousedown',e=>e.preventDefault());mu.onclick=e=>{e.stopPropagation();apMute()};
+ const fsb=mk('button','apfs');fsb.tabIndex=-1;fsb.title=TX.fs;fsb.setAttribute('aria-label',TX.fs);fsb.addEventListener('mousedown',e=>e.preventDefault());fsb.onclick=e=>{e.stopPropagation();apFsTog()};if(!document.documentElement.requestFullscreen)fsb.classList.add('nofs');apFsIcon();document.addEventListener('fullscreenchange',apFsIcon);
  const ve=mk('small','apver');ve.textContent=VER;ve.onclick=()=>apCred(1);
  mk('div','apcr',TX.credits).onclick=()=>apCred(0);mk('div','aprot',TX.rot);mk('div','aperr');mk('div','aphint');apMuIcon();
  if(TOUCHDEV)document.documentElement.classList.add('aptouch')}
@@ -666,7 +670,7 @@ async function apWake(){try{if('wakeLock' in navigator&&!apWl&&!document.hidden)
 /* Eingabe: Ton freischalten, Vollbild (bleibt), Querformat sperren, Zurück-Sperre anlegen (erst nach Eingabe, sonst überspringt Chrome sie) */
 function apInput(e){apWake();audSync();
  if(!apHist){apHist=1;try{history.pushState({ap:1},'')}catch(_){}}
- const d=document,el=d.documentElement;if(!apFsOff&&!d.fullscreenElement&&el.requestFullscreen&&!(e&&e.target&&e.target.closest&&e.target.closest('#tpf')))el.requestFullscreen().then(()=>{try{screen.orientation.lock('landscape').catch(()=>{})}catch(_){}}).catch(()=>{})}
+ const d=document,el=d.documentElement;if(!apFsOff&&!d.fullscreenElement&&el.requestFullscreen&&!(e&&e.target&&e.target.closest&&e.target.closest('#apfs')))el.requestFullscreen().then(()=>{try{screen.orientation.lock('landscape').catch(()=>{})}catch(_){}}).catch(()=>{})}
 addEventListener('pointerdown',apInput,true);addEventListener('keydown',apInput,true);
 /* Android-/Browser-Zurück: nie die Seite verlassen. Spiel → Pause, Menü → eine Ebene zurück, Lobby → nichts */
 addEventListener('popstate',()=>{try{history.pushState({ap:1},'')}catch(_){}
@@ -675,7 +679,7 @@ addEventListener('popstate',()=>{try{history.pushState({ap:1},'')}catch(_){}
  if(st==='set')return setIn('b');if(st==='pre')return preIn('b');if(st==='hs')return show('menu');
  if(st==='menu'&&!BK){const q=list().find(x=>!x.id.startsWith('bot'));if(q)bkOpen(q)}});
 /* Taste M = stumm */
-addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(!e.repeat&&(e.key==='m'||e.key==='M'))apMute()});
+addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(!e.repeat&&(e.key==='m'||e.key==='M')&&!apInGame())apMute()});
 /* Dreh-Hinweis: hochkant am Handy → laufendes Spiel pausieren */
 if(TOUCHDEV){const mq=matchMedia('(orientation:portrait)'),f=()=>{if(mq.matches)apPause()};if(mq.addEventListener)mq.addEventListener('change',f);else mq.addListener(f)}
 /* Menüseiten an die Bildschirmhöhe anpassen (wie die Lobby): Inhalt in .fw, bei Platzmangel verkleinert */
@@ -693,7 +697,7 @@ if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceW
 /* Mauszeiger im laufenden Spiel ausblenden, bei Bewegung kurz zeigen; Stumm-Knopf nur in Menü/Pause; Version nur in Lobby/Menü */
 addEventListener('mousemove',()=>{apMT=performance.now()});
 setInterval(()=>{const g=apInGame(),h=g&&performance.now()-apMT>2000,r=document.documentElement;if(r.classList.contains('nocur')!==h){r.classList.toggle('nocur',h);try{flWin().document.documentElement.classList.toggle('nocur',h)}catch(_){}}
- $('apmu').classList.toggle('off',g);apPW();document.body.classList.toggle('apmenu',['menu','set','pre','hs'].includes(st));document.body.classList.toggle('appz',GAMEST.includes(st)&&apPaused());document.body.classList.toggle('apnog',!g);$('apver').classList.toggle('off',st!=='lobby'&&st!=='menu')},300);
+ $('apmu').classList.toggle('off',g);$('apfs').classList.toggle('off',g);apPW();document.body.classList.toggle('apmenu',['menu','set','pre','hs'].includes(st));document.body.classList.toggle('appz',GAMEST.includes(st)&&apPaused());document.body.classList.toggle('apnog',!g);$('apver').classList.toggle('off',st!=='lobby'&&st!=='menu')},300);
  const gpb={},gpr={};
 const rStick=g=>g.mapping==='standard'?[g.axes[2]||0,g.axes[3]||0]:[0,0];
 function rsOn(g){const[x,y]=rStick(g),m=Math.hypot(x,y);if(!gpr[g.index]&&m>.6)gpr[g.index]=1;else if(gpr[g.index]&&m<.35)gpr[g.index]=0;return !!gpr[g.index]}
@@ -712,7 +716,7 @@ addEventListener('blur',()=>{const g=GS[st];if(g&&g.blur)g.blur()});
 addEventListener('gamepaddisconnected',e=>{apPause();const id='gp'+e.gamepad.index;delete P[id];delete gpb[id];leaveSnd();render()});
 const KB={ArrowLeft:1,ArrowRight:2,ArrowUp:32,ArrowDown:64,Backspace:8,Escape:8,c:128,C:128,Enter:4,' ':4,e:256,E:256,g:512,G:512};
 addEventListener('keydown',e=>{if(e.target&&e.target.tagName==='INPUT')return;{const g=GS[st];if(g&&/^(Escape|p|P)$/.test(e.key)&&g.pauseKey(e.repeat)){e.preventDefault();return}}if(e.key==='t'||e.key==='T'||e.key==='+'){addBot();return}if(e.key==='-'){removeBot();return}if((e.key==='n'||e.key==='N')&&P.kb&&st==='lobby'){e.preventDefault();const i=document.querySelector('.nmi[data-id="kb"]');if(i){i.focus();i.select()}return}if(KB[e.key]){e.preventDefault();if(!e.repeat)onMsg({id:'kb',name:'Tastatur',b:(kb|=KB[e.key])|tb})}});
-function fKey(e,d){if(!P.kb||!KB[e.key])return;if(d&&e.repeat)return;onMsg({id:'kb',name:'Tastatur',b:(d?(kb|=KB[e.key]):(kb&=~KB[e.key]))|tb})}
+function fKey(e,d){if(d&&!e.repeat&&(e.key==='m'||e.key==='M')&&!apInGame())apMute();if(!P.kb||!KB[e.key])return;if(d&&e.repeat)return;onMsg({id:'kb',name:'Tastatur',b:(d?(kb|=KB[e.key]):(kb&=~KB[e.key]))|tb})}
 addEventListener('keyup',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(KB[e.key])onMsg({id:'kb',name:'Tastatur',b:(kb&=~KB[e.key])|tb})});
 /* ===== Touch-Tasten (Handy ohne Controller) ===== */
 (function(){
@@ -724,7 +728,7 @@ addEventListener('keyup',e=>{if(e.target&&e.target.tagName==='INPUT')return;if(K
  const put=(mask,val)=>{const n=(tb&~mask)|val;if(n===tb)return;tb=n;send()};
  const vib=ms=>{try{cfgG.vib&&navigator.vibrate&&navigator.vibrate(ms)}catch(e){}};
  $('tpt').onclick=()=>{off=!off;try{localStorage.setItem('pa_tp',off?'0':'1')}catch(e){}vis()};
- $('tpf').onclick=()=>{try{const d=document,e=d.documentElement;apFsOff=!!d.fullscreenElement;if(d.fullscreenElement)d.exitFullscreen();else if(e.requestFullscreen)e.requestFullscreen().catch(()=>{})}catch(x){}};
+ 
  document.querySelectorAll('#tp [data-b]').forEach(el=>{const bit=+el.dataset.b;
   el.addEventListener('pointerdown',e=>{e.preventDefault();try{el.setPointerCapture(e.pointerId)}catch(_){}el.classList.add('on');vib(10);put(bit,bit)});
   const up=e=>{e.preventDefault();el.classList.remove('on');put(bit,0)};
