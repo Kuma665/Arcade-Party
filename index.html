@@ -573,7 +573,7 @@ setInterval(()=>{let ch=false;for(const id in P)if(!fixed(id)&&Date.now()-P[id].
 /* ===== Grundausstattung (wie in den anderen Spielen): Ton aus beim Verlassen, Stumm-Knopf, Fehleranzeige, Wake Lock,
    Zurück-Taste, Vollbild, Dreh-Hinweis, Mauszeiger ausblenden, Version + Credits. Texte zentral in TX.
    var statt let/const: pollPads() und push1() laufen schon, bevor dieser Block erreicht ist. ===== */
-var VER='v2026-11-22c';
+var VER='v2026-11-23';
 var TX={mute:'Ton an/aus (M)',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'<b>Arcade Party</b> '+VER+'<br>Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts)<br>QR-Code: qrcodejs (davidshimjs)<br>Handy-Verbindung: PeerJS (peerjs.com)<br><small>Tippen zum Schließen</small>'};
 var GAMEST=['demo','bm','bo','sm','rc','flood'],AUDC=[],apFoc=true,apMT=0,apFsOff=false,apL3={},apWl=null,apHist=0,apErrN=0;
@@ -1316,7 +1316,7 @@ function rcLoop(now){if(st!=='rc'||!RC||RC.done)return;const dt0=Math.min(.05,(n
  rcPZ.watch();
  if(!RC.pz){rcUpd(dt);if(dt<dt0&&!(RC.cd>0))RC.t+=dt0-dt}rcMus();if(!RC.done&&st==='rc'){rcDraw();requestAnimationFrame(rcLoop)}}
 
-/* Boss-Rush: ausgelagert in boss.js (wird unten nach diesem Script geladen) */
+/* Boss-Rush (eingebettet) */
 
 </script>
 <script>
