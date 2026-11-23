@@ -172,38 +172,37 @@ body.apmenu #tp{display:none}
  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button onclick="addBot()">+ Test-Spieler</button><button onclick="removeBot()">− Test-Spieler</button><span style="display:inline-flex;align-items:center;gap:4px;border:2px solid var(--ln);border-radius:14px;padding:2px 6px"><small>🎲 Teams</small><button onclick="shuffleTeams(2)" style="padding:.15em .65em;border-radius:9px">2</button><button onclick="shuffleTeams(3)" style="padding:.15em .65em;border-radius:9px">3</button><button onclick="shuffleTeams(4)" style="padding:.15em .65em;border-radius:9px">4</button><button onclick="clearTeams()" title="Teams aus" style="padding:.15em .65em;border-radius:9px">✕</button></span></div>
 </section>
 
-<div id="hc" style="position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2.4vh;background:#0b0820f2;backdrop-filter:blur(4px);z-index:60;text-align:center;padding:4vw"><h2 id="hct"></h2><div id="hcx" style="font-size:3vmin;max-width:80vw;line-height:1.35"></div><div id="hcp" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"></div><small>Alle drücken A, wenn sie die Steuerung kennen</small><button onclick="hgDone()">Überspringen</button></div>
-<div id="bk" style="position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2.4vh;background:#0b0820ee;backdrop-filter:blur(4px);z-index:50;text-align:center"><h2 id="bkt">Zurück zur Charakterauswahl?</h2><small>Alle müssen danach wieder „Bereit“ drücken.</small><div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center"><button onclick="bkYes()">Ja, zurück · A</button><button onclick="bkNo()">Nein · B</button></div></div>
+<div id="hc" style="position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2.4vh;background:#0b0820f2;backdrop-filter:blur(4px);z-index:60;text-align:center;padding:4vw"><h2 id="hct"></h2><div id="hcx" style="font-size:3vmin;max-width:80vw;line-height:1.35"></div><div id="hcp" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"></div><small data-kx="hcOk"></small><button onclick="hgDone()">Überspringen</button></div>
+<div id="bk" style="position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2.4vh;background:#0b0820ee;backdrop-filter:blur(4px);z-index:50;text-align:center"><h2 id="bkt">Zurück zur Charakterauswahl?</h2><small>Alle müssen danach wieder „Bereit“ drücken.</small><div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center"><button onclick="bkYes()" data-kx="bkYes"></button><button onclick="bkNo()" data-kx="bkNo"></button></div></div>
 <section id="menu">
  <h2>Was spielen wir?</h2>
  <div class="tiles" id="tiles"></div>
- <small>◀ ▶ ▲ ▼ wählen · A starten · B Charakterauswahl</small>
  <button onclick="const q=list().find(x=>!x.id.startsWith('bot'));if(q)bkOpen(q)">← Charakterauswahl</button>
  <div id="tpts" style="display:none;color:var(--mu);font-size:1.05em;text-align:center;margin-bottom:6px"></div>
   <div id="board"></div>
 </section>
 
-<section id="set"><h2>⚙️ Einstellungen</h2><div class="rows" id="setrows"></div><small>▲ ▼ wählen · ◀ ▶ ändern · B zurück</small></section>
+<section id="set"><h2>⚙️ Einstellungen</h2><div class="rows" id="setrows"></div></section>
 
-<section id="pre"><h2 id="pt"></h2><div class="rows" id="prerows"></div><div class="rc" id="prec" style="font-size:1.15em;text-align:center"></div><small>▲ ▼ wählen · ◀ ▶ ändern · B zurück</small></section>
+<section id="pre"><h2 id="pt"></h2><div class="rows" id="prerows"></div><div class="rc" id="prec" style="font-size:1.15em;text-align:center"></div></section>
 
 <section id="demo">
  <h2 id="dt"></h2><div id="dc"></div><div class="bars" id="dp"></div>
- <div id="dpz"><h2>⏸ Pause</h2><small id="dpn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="dpr"></div><small>▲ ▼ wählen · A ok</small></div>
+ <div id="dpz"><h2>⏸ Pause</h2><small id="dpn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="dpr"></div></div>
 </section>
 
 <section id="hs"><h2>🏆 Bestenliste</h2>
  <div class="hsg"><div><h3>Gesamtwertung</h3><ol id="hstot"></ol></div><div><h3>Rekorde</h3><ol id="hsrec"></ol></div></div>
- <button onclick="show('menu')">Zurück</button><small>A / B: zurück</small></section>
+ <button onclick="show('menu')">Zurück</button></section>
 
-<section id="res"><h2>Ergebnis</h2><ol id="rl"></ol><small id="rn"></small><div id="rv"></div><small id="rsm">Es geht gleich weiter…</small><div id="rmw" style="display:none;gap:12px;justify-content:center;flex-wrap:wrap"><button onclick="rematch()">↻ Nochmal · A</button><button onclick="show('menu')">Menü · B</button></div></section>
+<section id="res"><h2>Ergebnis</h2><ol id="rl"></ol><small id="rn"></small><div id="rv"></div><small id="rsm">Es geht gleich weiter…</small><div id="rmw" style="display:none;gap:12px;justify-content:center;flex-wrap:wrap"><button onclick="rematch()" data-kx="rmA"></button><button onclick="show('menu')" data-kx="rmB"></button></div></section>
 <section id="trn"><h2 id="trh"></h2><div class="tg" id="trg"></div><div id="trq"></div><small id="trt" style="text-align:center"></small><h3 id="trz"></h3><ol id="trl"></ol><div id="trp"></div><small id="trs"></small><button onclick="tourCancel()">Turnier beenden</button></section>
-<section id="tfin"><h2 id="tfh"></h2><div id="tfw"></div><ol id="tfl"></ol><div id="tfr"></div><div id="tfs"></div><small>Zurück zum Menü in ein paar Sekunden · A</small></section>
+<section id="tfin"><h2 id="tfh"></h2><div id="tfw"></div><ol id="tfl"></ol><div id="tfr"></div><div id="tfs"></div><small data-kx="tfin"></small></section>
 
-<section id="bm"><canvas id="bc"></canvas><div id="bpz"><h2>⏸ Pause</h2><small id="bpn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="bpr"></div><small>▲ ▼ wählen · A ok</small></div></section>
-<section id="bo"><canvas id="boc"></canvas><div id="opz"><h2>⏸ Pause</h2><small id="opn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="opr"></div><small>▲ ▼ wählen · A ok</small></div></section>
-<section id="sm"><canvas id="smc"></canvas><div id="spz"><h2>⏸ Pause</h2><small id="spn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="spr"></div><small>▲ ▼ wählen · A ok</small></div></section>
-<section id="rc"><canvas id="rcv"></canvas><div id="rpz"><h2>⏸ Pause</h2><small id="rpn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="rpr"></div><small>▲ ▼ wählen · A ok</small></div></section>
+<section id="bm"><canvas id="bc"></canvas><div id="bpz"><h2>⏸ Pause</h2><small id="bpn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="bpr"></div></div></section>
+<section id="bo"><canvas id="boc"></canvas><div id="opz"><h2>⏸ Pause</h2><small id="opn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="opr"></div></div></section>
+<section id="sm"><canvas id="smc"></canvas><div id="spz"><h2>⏸ Pause</h2><small id="spn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="spr"></div></div></section>
+<section id="rc"><canvas id="rcv"></canvas><div id="rpz"><h2>⏸ Pause</h2><small id="rpn" style="text-align:center;color:var(--gold);max-width:90vw"></small><div class="rows" id="rpr"></div></div></section>
 <div id="msg" style="display:none;position:fixed;left:4vw;right:4vw;top:3vh;z-index:9;background:#ff2d95;color:#fff;padding:14px 18px;border-radius:14px;text-align:center"></div>
 <div id="tp" hidden><div id="tdp"><i data-d="u">▲</i><i data-d="d">▼</i><i data-d="l">◀</i><i data-d="r">▶</i></div><button id="tbE" tabindex="-1" data-b="256">😀</button><button id="tbB" tabindex="-1" data-b="8">B</button><button id="tbA" tabindex="-1" data-b="4">A</button><button id="tbP" tabindex="-1" data-b="16">II</button></div>
 <div id="tpc" hidden><button id="tpt" tabindex="-1" title="Touch-Tasten an/aus" onmousedown="event.preventDefault()">🎮</button><button id="tpf" tabindex="-1" title="Vollbild" onmousedown="event.preventDefault()">⛶</button></div>
@@ -276,7 +275,7 @@ function rvVote(p,v){if(p.id.startsWith('bot'))return;RV[p.id]=v;RVt=Date.now();
 setInterval(()=>{if(st==='res'&&!T&&RVt&&Date.now()-RVt>8000)rvDecide()},500);
 let TIP={sel:{},pick:{}};const tipHum=()=>list().filter(p=>!p.id.startsWith('bot')),tipCand=()=>list();
 const tipIdx=p=>{const c=tipCand();let i=TIP.sel[p.id];if(i==null||i>=c.length)i=Math.max(0,c.indexOf(p));return i};
-function trsTxt(){if(!T)return;const H=tipHum();$('trs').textContent='Start in '+T.cd+' s · 🔮 Tipps '+H.filter(p=>TIP.pick[p.id]!=null).length+'/'+H.length+' · ◀ ▶ wählen · A bestätigen'}
+function trsTxt(){if(!T)return;const H=tipHum();$('trs').innerHTML='Start in '+T.cd+' s · 🔮 Tipps '+H.filter(p=>TIP.pick[p.id]!=null).length+'/'+H.length+apKx(TX.trs)}
 function tipRender(){if(!T||st!=='trn')return;const c=tipCand();$('trp').innerHTML=tipHum().map(p=>{const t=c[tipIdx(p)],ok=TIP.pick[p.id]!=null;return `<span class="${ok?'ok':''}" style="--c:${COL[p.co]}">${esc(p.name)} → ${esc(t?t.name:'?')}${ok?' ✔':''}</span>`}).join('');trsTxt()}
 function tipIn(p,dn){if(p.id.startsWith('bot'))return;const c=tipCand();if(!c.length)return;
  if(TIP.pick[p.id]!=null){if(dn(8))delete TIP.pick[p.id];else return}
@@ -316,8 +315,8 @@ const gpKind=g=>/054c|sony|dualshock|dualsense|playstation|wireless controller/i
 const gpOf=id=>{const gs=navigator.getGamepads?navigator.getGamepads():[];return gs[+id.slice(2)]};
 function keysOf(p){if(p.id==='kb')return{r:'Enter',f:'⌫',b:'C'};if(p.id.startsWith('gp')){const g=gpOf(p.id);return g&&gpKind(g)==='ps'?{r:'✕',f:'○',b:'□'}:{r:'A',f:'B',b:'X'}}return{r:'A',f:'B',b:'C'}}
 function legend(){const gs=(navigator.getGamepads?Array.from(navigator.getGamepads()):[]).filter(Boolean),ps=gs.some(g=>gpKind(g)==='ps'),xb=gs.some(g=>gpKind(g)==='xbox');
- const c=[];if(xb||!ps)c.push('<div><b>Xbox:</b> Steuerkreuz links/rechts Figur · hoch/runter Hut · <b>B</b> / <b>X</b> Farbe · <b>A</b> bereit · nach „Bereit“ <b>B</b> abbrechen</div>');if(ps||!xb)c.push('<div><b>PlayStation:</b> Steuerkreuz links/rechts Figur · hoch/runter Hut · <b>○</b> / <b>□</b> Farbe · <b>✕</b> bereit · nach „Bereit“ <b>○</b> abbrechen</div>');
- $('legend').innerHTML='<div>◀ ▶ Figur · ▲ ▼ Hut · <b>B</b> Farbe · <b>A</b> bereit · nach „Bereit“ <b>B</b> abbrechen</div><div>Emoji: 😀 / L2 / R2 halten (nach „Bereit“ auch L1 / R1) · Name: Handy oben antippen / Start / N</div><div>Verlassen: Controller <b>Dreieck</b> · ✕ am Slot · am Handy Namen antippen → „Spiel verlassen“</div><div>Team: <b>L1 / R1</b> (vor „Bereit“) · Taste <b>G</b> · ⚑ am Handy · ◀ ▶ am Slot</div>'+(TOUCHDEV?'<div>Touch: Pfeile links · A bereit · B Farbe / Abbrechen · 😀 halten + Pfeil = Emoji</div>':'')}
+ const c=[];if(xb||!ps)c.push('<div><b>Xbox:</b> Steuerkreuz links/rechts Figur · hoch/runter Hut · '+apKx('{B} / {X} Farbe · {A} bereit · nach „Bereit“ {B} abbrechen','xb')+'</div>');if(ps||!xb)c.push('<div><b>PlayStation:</b> Steuerkreuz links/rechts Figur · hoch/runter Hut · '+apKx('{B} / {X} Farbe · {A} bereit · nach „Bereit“ {B} abbrechen','ps')+'</div>');
+ $('legend').innerHTML='<div>◀ ▶ Figur · ▲ ▼ Hut · '+apKx('{B} Farbe · {A} bereit · nach „Bereit“ {B} abbrechen','xb')+'</div><div>Emoji: 😀 / L2 / R2 halten (nach „Bereit“ auch L1 / R1) · Name: Handy oben antippen / Start / N</div><div>Verlassen: Controller '+apSym('y','ps')+' / '+apSym('y','xb')+' · ✕ am Slot · am Handy Namen antippen → „Spiel verlassen“</div><div>Team: <b>L1 / R1</b> (vor „Bereit“) · Taste <b>G</b> · ⚑ am Handy · ◀ ▶ am Slot</div>'+(TOUCHDEV?'<div>Touch: Pfeile links · A bereit · B Farbe / Abbrechen · 😀 halten + Pfeil = Emoji</div>':'')}
 addEventListener('gamepadconnected',()=>{try{render()}catch(e){}});
 const ld=k=>{try{return JSON.parse(localStorage.getItem(k)||'{}')||{}}catch(e){return{}}};
 const LOOK=ld('pa_look');
@@ -358,10 +357,10 @@ function drawPv(c,p){const c2=c.getContext('2d');c2.setTransform(1,0,0,1,0,0);c2
 function drawPvs(){document.querySelectorAll('canvas.pv').forEach(c=>{const p=c.dataset.hs!=null?HSL[+c.dataset.hs]:P[c.dataset.id];if(p)drawPv(c,p)})}
 
 let BK=null;function bkNo(){BK=null;$('bk').style.display='none';push()}function bkOpen(p){BK=p.id;$('bkt').textContent=p.name+': Zurück zur Charakterauswahl?';$('bk').style.display='flex';beep(cfgG.sfx,0,440);push()}function bkYes(){BK=null;$('bk').style.display='none';list().forEach(p=>p.rd=p.id.startsWith('bot'));show('lobby')}
-const HCT={0:['🌊 The Flood','◀ ▶ laufen · ▲ oder A springen. Gemeinsam überleben, das Wasser steigt!'],1:['💥 Bomben-Chaos','◀ ▶ ▲ ▼ laufen · A = Bombe legen. Der letzte Überlebende gewinnt.'],2:['🤼 Sumo-Arena','◀ ▶ ▲ ▼ laufen · A = Dash · B = Block (kurz vor dem Treffer = Parade!). Wer von der schrumpfenden Plattform fliegt, ist raus.'],3:['🏁 Hindernisrennen','◀ ▶ laufen · A oder ▲ springen · B schubsen. Wer zuerst im Ziel ist, gewinnt. Wer rausfliegt, hilft dem Letzten mit A (Rückenwind).'],4:['🐲 Boss-Rush','Alle zusammen gegen den Drachen! Wähle deine Ausrüstung. B = Angriff, B halten = Spezial.']};
+const HCT={0:['🌊 The Flood','◀ ▶ laufen · ▲ oder {A} springen. Gemeinsam überleben, das Wasser steigt!'],1:['💥 Bomben-Chaos','◀ ▶ ▲ ▼ laufen · {A} = Bombe legen. Der letzte Überlebende gewinnt.'],2:['🤼 Sumo-Arena','◀ ▶ ▲ ▼ laufen · {A} = Dash · {B} = Block (kurz vor dem Treffer = Parade!). Wer von der schrumpfenden Plattform fliegt, ist raus.'],3:['🏁 Hindernisrennen','◀ ▶ laufen · {A} oder ▲ springen · {B} schubsen. Wer zuerst im Ziel ist, gewinnt. Wer rausfliegt, hilft dem Letzten mit {A} (Rückenwind).'],4:['🐲 Boss-Rush','Alle zusammen gegen den Drachen! Wähle deine Ausrüstung. {B} = Angriff, {B} halten = Spezial.']};
 let HG=null,HSEEN={};
 function hgRender(){if(!HG)return;$('hcp').innerHTML=tipHum().map(p=>`<span style="--c:${COL[p.co]};padding:.2em .8em;border:2px solid var(--c);border-radius:999px;${HG.ok[p.id]?'background:var(--c);color:#111':'opacity:.6'}">${esc(p.name)} ${HG.ok[p.id]?'✔':'…'}</span>`).join('')}
-function hgOpen(i){HG={i,ok:{},t:Date.now()};$('hct').textContent=HCT[i][0];$('hcx').textContent=HCT[i][1];$('hc').style.display='flex';hgRender();push()}
+function hgOpen(i){HG={i,ok:{},t:Date.now()};$('hct').textContent=HCT[i][0];$('hcx').dataset.kx=HCT[i][1];$('hcx').innerHTML=apKx(HCT[i][1]);$('hc').style.display='flex';hgRender();push()}
 function hgDone(){if(!HG)return;const i=HG.i;HG=null;HSEEN[i]=1;$('hc').style.display='none';launch(i)}
 function hgIn(p,dn){if(p.id.startsWith('bot')||!dn(4))return;HG.ok[p.id]=1;beep(cfgG.sfx,0,659);hgRender();push1(p);if(tipHum().every(q=>HG.ok[q.id]))setTimeout(hgDone,500)}
 setInterval(()=>{if(HG&&Date.now()-HG.t>25000)hgDone()},1000);
@@ -404,7 +403,7 @@ function leaveP(id){const p=P[id];if(!p||st!=='lobby'||cdT||(ned&&ned.id===id))r
  if(!fixed(id))sendPad(id,{lf:1});
  if(/^gp/.test(id))GPOFF[id]=1;
  delete P[id];if(BK===id)bkNo();leaveSnd();render();push();checkReady()}
-function onMsg(m){let p=P[m.id];
+function onMsg(m){if(m&&m.b&&typeof m.id==='string'&&!/^bot/.test(m.id))apKindSet(apKindOf(m.id));let p=P[m.id];
  if(((m.b|0)&32768)&&!fixed(m.id)){if(p)leaveP(m.id);return}
  if(!p){const used=list().map(x=>x.slot),slot=[0,1,2,3,4,5,6,7].find(i=>!used.includes(i));if(slot===undefined)return;
   p=P[m.id]={id:m.id,slot,name:nameFor(m),pts:LEFTP[m.id]||0,b:0,rd:false,seen:Date.now(),taps:0,ch:slot,hat:-1,co:freeCo(slot),eo:((m.b|0)>>8)&63,tm:0};restoreLook(p);joinSnd();render();push();return}
@@ -460,7 +459,7 @@ function makePause(c){
  const render=()=>{const B=o();if(!B)return;const l=B.lost||[];
   $(c.note).textContent=l.length?'Verbindung verloren: '+l.map(q=>q.p.name).join(', ')+'. Das Handy verbindet sich von selbst wieder.':(B.pby?'⏸ '+B.pby+' hat pausiert':'');
   B.pzm=l.length?['drop','rs','quit']:['go','rs','quit'];
-  const T={go:'Weiter',rs:B.rsq?'Wirklich neu starten? · A':'Neustart',quit:'Zum Menü',drop:'Ohne '+(l.length>1?'sie':l[0]?esc(l[0].p.name):'')+' weiter'};
+  const T={go:'Weiter',rs:B.rsq?apKx(TX.rsq):'Neustart',quit:'Zum Menü',drop:'Ohne '+(l.length>1?'sie':l[0]?esc(l[0].p.name):'')+' weiter'};
   $(c.rows).innerHTML=B.pzm.map((a,i)=>`<div class="rw go ${i===B.pzi?'sel':''}" onclick="${c.click}(${i})">${T[a]}</div>`).join('')};
  const pause=(v,by)=>{const B=o();if(!B||B.done)return;if(c.strict&&!!v===!!B.pz)return;B.rsq=0;
   if(c.onPause)c.onPause(B,!!v);
@@ -512,7 +511,7 @@ function award(rows,note,rec,agg){let tn='';rows.sort((a,b)=>b.v-a.v);
  if(T)rows.forEach(r=>{if(r.p.id.startsWith('bot'))return;const e=T.h[r.p.id]||(T.h[r.p.id]={n:r.p.name,pl:[],ls:[],rk:[]});e.pl[T.r-1]=r.tr;e.ls[T.r-1]=rows.length>2&&r.tr===Math.max(...rows.map(x=>x.tr))});
  if(T)(T.rr=T.rr||[])[T.r-1]={g:T.list[T.r-1],w:[...new Set(rows.filter(r=>r.tr===1&&!r.p.id.startsWith('bot')).map(r=>TMON&&r.p.tm?TN[r.p.tm-1]:r.p.name))]};
  $('rl').innerHTML=rows.map((r,i)=>`<li style="--c:${COL[r.p.co]}">${r.tr?r.tr+'.':'–'} ${av(r.p)}${esc(r.p.name)}${tmb(r.p)} <small>${r.txt}</small>${r.tr?'<b>+'+r.pt+'</b>':''}</li>`).join('');
- if(tn)note=tn+(note?' · '+note:'');if(T)note='Runde '+T.r+' von '+T.list.length+(note?' · '+note:'');{const tp=tipEval(rows);if(tp)note+=(note?' · ':'')+tp}$('rn').textContent=note;resT=Date.now();RV={};RVt=0;$('rmw').style.display=T?'none':'flex';$('rsm').textContent=T?'Es geht gleich weiter…':'Abstimmung: A = nochmal · B = Menü · es zählt die Mehrheit';show('res');rvRender();setTimeout(()=>{if(st==='res'){if(T)tourNext();else rvDecide()}},T?7000:20000)}
+ if(tn)note=tn+(note?' · '+note:'');if(T)note='Runde '+T.r+' von '+T.list.length+(note?' · '+note:'');{const tp=tipEval(rows);if(tp)note+=(note?' · ':'')+tp}$('rn').textContent=note;resT=Date.now();RV={};RVt=0;$('rmw').style.display=T?'none':'flex';$('rsm').dataset.kx=T?'resT':'resV';$('rsm').innerHTML=apKx(TX[T?'resT':'resV']);show('res');rvRender();setTimeout(()=>{if(st==='res'){if(T)tourNext();else rvDecide()}},T?7000:20000)}
 
 let fg=null;
 function msg(t){const m=$('msg');m.textContent=t;m.style.display='block';setTimeout(()=>m.style.display='none',9000)}
@@ -573,10 +572,32 @@ setInterval(()=>{let ch=false;for(const id in P)if(!fixed(id)&&Date.now()-P[id].
 /* ===== Grundausstattung (wie in den anderen Spielen): Ton aus beim Verlassen, Stumm-Knopf, Fehleranzeige, Wake Lock,
    Zurück-Taste, Vollbild, Dreh-Hinweis, Mauszeiger ausblenden, Version + Credits. Texte zentral in TX.
    var statt let/const: pollPads() und push1() laufen schon, bevor dieser Block erreicht ist. ===== */
-var VER='v2026-11-23b';
-var TX={mute:'Ton an/aus (M)',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
+var VER='v2026-11-23c';
+var TX={hOk:'{A} OK · {B} Zurück',hPz:'{A} Wählen · {B} Weiterspielen',hcOk:'Alle drücken {A}, wenn sie die Steuerung kennen',bkYes:'Ja, zurück · {A}',bkNo:'Nein · {B}',rmA:'↻ Nochmal · {A}',rmB:'Menü · {B}',tfin:'Zurück zum Menü in ein paar Sekunden · {A}',resT:'Es geht gleich weiter…',resV:'Abstimmung: {A} = nochmal · {B} = Menü · es zählt die Mehrheit',rsq:'Wirklich neu starten? · {A}',trs:' · ◀ ▶ wählen · {A} bestätigen',boSel:'◀ ▶ wählen · {A} bestätigen · {B} ändern',boHold:'🛡 {A} halten!',
+ mute:'Ton an/aus (M)',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'<b>Arcade Party</b> '+VER+'<br>Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts)<br>QR-Code: qrcodejs (davidshimjs)<br>Handy-Verbindung: PeerJS (peerjs.com)<br><small>Tippen zum Schließen</small>'};
 var GAMEST=['demo','bm','bo','sm','rc','flood'],AUDC=[],apFoc=true,apMT=0,apFsOff=false,apL3={},apWl=null,apHist=0,apErrN=0;
+/* Tastensymbole (23.11.2026): richten sich nach der zuletzt benutzten Eingabe. PS → ✕ ○ □ △ (SVG), Xbox/Handy-Pad/Touch → A B X Y, Tastatur → Enter/Esc.
+   Texte mit Platzhaltern {A} {B} {X} {Y}: apKx() für HTML (runde Plakette), apKxc() für Canvas. Elemente mit data-kx (TX-Schlüssel oder Text) füllt apSymRefresh(). */
+var apKind='xb';
+const SYM={ps:{a:'✕',b:'○',x:'□',y:'△'},xb:{a:'A',b:'B',x:'X',y:'Y'},kb:{a:'Enter',b:'Esc',x:'C',y:'Y'}};
+const PSV={a:'<path d="M2.6 2.6L7.4 7.4M7.4 2.6L2.6 7.4"/>',b:'<circle cx="5" cy="5" r="2.7"/>',x:'<rect x="2.5" y="2.5" width="5" height="5"/>',y:'<path d="M5 2.3L7.9 7.3H2.1Z"/>'};
+function apSym(k,kind){kind=kind||apKind;if(kind==='ps')return '<span class="psg ps'+k+'"><svg viewBox="0 0 10 10">'+PSV[k]+'</svg></span>';return '<span class="psg '+(kind==='kb'?'kb':'xb'+k)+'">'+SYM[kind][k]+'</span>'}
+function apKx(s,kind){return String(s).replace(/\{([ABXY])\}/g,(m,k)=>apSym(k.toLowerCase(),kind))}
+function apKxc(s){return String(s).replace(/\{([ABXY])\}/g,(m,k)=>SYM[apKind][k.toLowerCase()])}
+function apSymRefresh(){document.querySelectorAll('[data-kx]').forEach(e=>{const k=e.dataset.kx;e.innerHTML=apKx(TX[k]!=null?TX[k]:k)});try{if(st==='lobby')legend();if(st==='trn')trsTxt();render()}catch(_){}apHintUpd()}
+function apKindSet(k){if(k&&k!==apKind){apKind=k;apSymRefresh()}}
+function apKindOf(id){if(/^gp/.test(id)){const g=gpOf(id);return g&&gpKind(g)==='ps'?'ps':'xb'}return id==='kb'&&!TOUCHDEV?'kb':'xb'}
+/* Knopf-Hinweis unten rechts: nur mit Controller, nur in Menüs/Pause, nicht auf scrollenden Seiten */
+function apHintUpd(){const e=document.getElementById('aphint');if(!e)return;let h='';
+ const gp=(navigator.getGamepads?Array.from(navigator.getGamepads()):[]).some(Boolean);
+ if(gp&&apFoc){if(GAMEST.includes(st)){if(apPaused())h=TX.hPz}
+  else if(['menu','set','pre','hs'].includes(st)&&$('hc').style.display!=='flex'&&$('bk').style.display!=='flex'){const s=document.querySelector('section.on');if(!s||s.scrollHeight<=s.clientHeight+2)h=TX.hOk}}
+ h=h?apKx(h):'';{const q=$('mq'),r=h&&q&&getComputedStyle(q).display!=='none'?(innerWidth-q.getBoundingClientRect().left+12)+'px':'';if(e.style.right!==r)e.style.right=r}if(e.dataset.h!==h){e.dataset.h=h;e.innerHTML=h;e.style.display=h?'block':'none'}}
+setInterval(apHintUpd,250);
+addEventListener('gamepadconnected',e=>apKindSet(gpKind(e.gamepad)==='ps'?'ps':'xb'));
+
+setTimeout(apSymRefresh,0);
 {const cl=(v,d)=>Number.isFinite(+v)?Math.max(0,Math.min(100,Math.round(+v))):d;cfgG.mus=cl(cfgG.mus,100);cfgG.sfx=cl(cfgG.sfx,100);cfgG.mute=cfgG.mute?1:0;cfgG.vib=cfgG.vib===0?0:1}
 /* Alle AudioContexte (auch im Flood-iframe) erfassen: stumm, Tab weg oder Fenster ohne Fokus → anhalten */
 function audOff(){return !!cfgG.mute||document.hidden||!apFoc}
@@ -603,11 +624,15 @@ function apGp(gs){const cr=$('apcr'),co=cr&&cr.style.display==='flex';for(const 
  '#aprot{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;text-align:center;background:#17123a;color:#fff;font-size:7vmin;line-height:1.4}'+
  '@media (orientation:portrait){html.aptouch #aprot{display:flex}}'+
  '#aperr{position:fixed;left:max(6px,env(safe-area-inset-left,0px));bottom:max(6px,env(safe-area-inset-bottom,0px));max-width:70vw;z-index:110;display:none;background:#b00020e6;color:#fff;font:12px/1.3 system-ui,sans-serif;padding:4px 8px;border-radius:6px;pointer-events:none}'+
- 'html.nocur,html.nocur *{cursor:none!important}';document.head.appendChild(css);
+ 'html.nocur,html.nocur *{cursor:none!important}'+
+ '.psg{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:1.5em;height:1.5em;border-radius:50%;background:#0b0820;border:.1em solid currentColor;vertical-align:middle;position:relative;top:-.08em;margin:0 .08em;font:700 .9em/1 Rajdhani,system-ui,sans-serif;text-shadow:none;flex:none}'+
+ '.psg svg{width:72%;height:72%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}'+
+ '.psg.psa{color:#8ab4ff}.psg.psb{color:#ff6b7a}.psg.psx{color:#ff8fd0}.psg.psy{color:#4fe0b0}.psg.xba{color:#62d962}.psg.xbb{color:#ff5a5a}.psg.xbx{color:#4ea3ff}.psg.xby{color:#ffd23d}.psg.kb{width:auto;height:1.7em;border-radius:.35em;padding:0 .4em;color:#f6f3ff;font-size:.75em}'+
+ '#aphint{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));z-index:70;display:none;font-size:max(13px,2.6vh);color:var(--tx);opacity:.9;text-shadow:0 1px 3px #000;pointer-events:none;white-space:nowrap}';document.head.appendChild(css);
  const mk=(t,id,h)=>{const e=document.createElement(t);e.id=id;if(h)e.innerHTML=h;document.body.appendChild(e);return e};
  const mu=mk('button','apmu');mu.tabIndex=-1;mu.title=TX.mute;mu.setAttribute('aria-label',TX.mute);mu.addEventListener('mousedown',e=>e.preventDefault());mu.onclick=e=>{e.stopPropagation();apMute()};
  const ve=mk('small','apver');ve.textContent=VER;ve.onclick=()=>apCred(1);
- mk('div','apcr',TX.credits).onclick=()=>apCred(0);mk('div','aprot',TX.rot);mk('div','aperr');apMuIcon();
+ mk('div','apcr',TX.credits).onclick=()=>apCred(0);mk('div','aprot',TX.rot);mk('div','aperr');mk('div','aphint');apMuIcon();
  if(TOUCHDEV)document.documentElement.classList.add('aptouch')}
 /* Fehleranzeige am Bildschirmrand (auch für Fehler im Flood-iframe) */
 function apErr(t){if(++apErrN>30)return;const e=$('aperr');if(!e)return;e.textContent=TX.err+String(t).slice(0,180);e.style.display='block';clearTimeout(apErr.t);apErr.t=setTimeout(()=>e.style.display='none',9000)}
@@ -703,7 +728,7 @@ render();
 
 /* ===== Module (tourney / bomber / race) ===== */
 /* ===== Turnier (Rundenmodus) ===== */
-const THINT={0:'Gemeinsam überleben, das Wasser steigt!',1:'A = Bombe. Der letzte Überlebende gewinnt.',2:'A = Dash · B = Block. Wer runterfliegt, ist raus.',4:'Gemeinsam gegen den Drachen: Schwert, Bogen oder Schild!',3:'A / ▲ springen · B schubsen. Wer zuerst im Ziel ist, gewinnt.',d:'Tippe A so schnell du kannst!'};
+const THINT={0:'Gemeinsam überleben, das Wasser steigt!',1:'{A} = Bombe. Der letzte Überlebende gewinnt.',2:'{A} = Dash · {B} = Block. Wer runterfliegt, ist raus.',4:'Gemeinsam gegen den Drachen: Schwert, Bogen oder Schild!',3:'{A} / ▲ springen · {B} schubsen. Wer zuerst im Ziel ist, gewinnt.',d:'Tippe {A} so schnell du kannst!'};
 function tourClear(){clearInterval(tTm);clearTimeout(tTm);tTm=null}
 const tourRows=()=>list().map(p=>({p,v:p.pts-((T&&T.s[p.id])||0)})).sort((a,b)=>b.v-a.v);
 const tourRank=rows=>rows.map(r=>1+rows.findIndex(x=>x.v===r.v));
@@ -722,7 +747,7 @@ function tourNext(){if(!T)return;tourClear();if(T.r>0)tourHist();if(T.r>=T.list.
  const g=T.list[T.r],rows=tourRows(),rk=tourRank(rows);
  $('trh').textContent='Runde '+(T.r+1)+' von '+T.list.length;
  $('trg').textContent=GAMES[g][2]+' '+GAMES[g][0];
- $('trt').textContent=THINT[g]||THINT.d;
+ $('trt').dataset.kx=THINT[g]||THINT.d;$('trt').innerHTML=apKx(THINT[g]||THINT.d);
  $('trq').innerHTML=T.list.map((x,i)=>`<span class="${i===T.r?'cur':i<T.r?'dn':''}">${GAMES[x][2]}</span>`).join('');
  $('trz').textContent=T.r?'Zwischenstand':'';
  $('trl').style.display=T.r?'':'none';
@@ -1457,7 +1482,7 @@ function selTick(dt){const B=BO;B.selT-=dt;
  B.sel=0;B.cd=3}
 function drawSel(c,B){c.save();c.textAlign='center';c.lineWidth=5;c.strokeStyle='#0b0820';
  c.font='56px Bungee,sans-serif';c.strokeText('Ausrüstung wählen',W/2,70);c.fillStyle='#ffc83d';c.fillText('Ausrüstung wählen',W/2,70);
- c.font='700 26px Rajdhani,sans-serif';c.fillStyle='#f6f3ff';c.strokeText('◀ ▶ wählen · A bestätigen · B ändern',W/2,108);c.fillText('◀ ▶ wählen · A bestätigen · B ändern',W/2,108);
+ c.font='700 26px Rajdhani,sans-serif';c.fillStyle='#f6f3ff';{const s=apKxc(TX.boSel);c.strokeText(s,W/2,108);c.fillText(s,W/2,108)}
  const k=B.pl.length>6?.5:.62;
  for(const q of B.pl){const e=EQ[q.pi],x=q.x,y=q.y-152*k-70;
   c.fillStyle=q.ok?'#14472d':'#1c1546';c.strokeStyle=q.ok?'#4dff9d':'#ffc83d';c.lineWidth=3;c.beginPath();c.roundRect(x-58,y-62,116,126,12);c.fill();c.stroke();
@@ -1516,7 +1541,7 @@ function draw(){const B=BO,cv=$('boc'),sc=Math.min(apPW()/W,innerHeight/H);
   else if(a.ty==='beam'&&a.tg.hp>0){c.strokeStyle=`rgba(255,60,80,${.35+bl})`;c.lineWidth=4+p*26;G('#ff2d2d',18);c.beginPath();c.moveTo(bx,by+60);c.lineTo(a.tg.x,a.tg.y-90);c.stroke();G('transparent',0);
    c.font='34px sans-serif';c.textAlign='center';c.fillText('🎯',a.tg.x,a.tg.y-150)}
   else if(a.ty==='pulse'){c.font='30px sans-serif';c.textAlign='center';c.fillText('⚡⚡⚡',bx,by+150)}
-  c.font='700 28px Rajdhani,sans-serif';c.fillStyle='#fff';c.textAlign='center';c.lineWidth=5;c.strokeStyle='#0b0820';const tt=a.ty==='slam'?'⚠ SCHOCKWELLE – 🛡 A halten!':a.ty==='beam'?'⚠ STRAHL – 🛡 A halten!':'⚠ BLITZE – 🛡 A halten!';c.strokeText(tt,W/2,FY-218);c.fillText(tt,W/2,FY-218)}
+  c.font='700 28px Rajdhani,sans-serif';c.fillStyle='#fff';c.textAlign='center';c.lineWidth=5;c.strokeStyle='#0b0820';const tt=(a.ty==='slam'?'⚠ SCHOCKWELLE – ':a.ty==='beam'?'⚠ STRAHL – ':'⚠ BLITZE – ')+apKxc(TX.boHold);c.strokeText(tt,W/2,FY-218);c.fillText(tt,W/2,FY-218)}
  /* Schild-Kuppel */
  const sh=B.end==null?shielding():[];
  if(sh.length){const xs=B.pl.filter(q=>q.hp>0).map(q=>q.x),x0=Math.min(...xs)-70,x1=Math.max(...xs)+70;
