@@ -575,7 +575,7 @@ setInterval(()=>{let ch=false;for(const id in P)if(!fixed(id)&&Date.now()-P[id].
 /* ===== Grundausstattung (wie in den anderen Spielen): Ton aus beim Verlassen, Stumm-Knopf, Fehleranzeige, Wake Lock,
    Zurück-Taste, Vollbild, Dreh-Hinweis, Mauszeiger ausblenden, Version + Credits. Texte zentral in TX.
    var statt let/const: pollPads() und push1() laufen schon, bevor dieser Block erreicht ist. ===== */
-var VER='v2026-11-23g';
+var VER='v2026-11-23h';
 var TX={gfxL:'Grafik',gfx:['Auto','Niedrig','Mittel','Hoch'],hOk:'{A} OK · {B} Zurück',hPz:'{A} Wählen · {B} Weiterspielen',hcOk:'Alle drücken {A}, wenn sie die Steuerung kennen',bkYes:'Ja, zurück · {A}',bkNo:'Nein · {B}',rmA:'↻ Nochmal · {A}',rmB:'Menü · {B}',tfin:'Zurück zum Menü in ein paar Sekunden · {A}',resT:'Es geht gleich weiter…',resV:'Abstimmung: {A} = nochmal · {B} = Menü · es zählt die Mehrheit',rsq:'Wirklich neu starten? · {A}',trs:' · ◀ ▶ wählen · {A} bestätigen',boSel:'◀ ▶ wählen · {A} bestätigen · {B} ändern',boHold:'🛡 {A} halten!',
  mute:'Ton an/aus (M)',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'<b>Arcade Party</b> '+VER+'<br>Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts)<br>QR-Code: qrcodejs (davidshimjs)<br>Handy-Verbindung: PeerJS (peerjs.com)<br><small>Tippen zum Schließen</small>'};
@@ -640,7 +640,8 @@ function apGp(gs){const cr=$('apcr'),co=cr&&cr.style.display==='flex';for(const 
  '.psg{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:1.5em;height:1.5em;border-radius:50%;background:#0b0820;border:.1em solid currentColor;vertical-align:middle;position:relative;top:-.08em;margin:0 .08em;font:700 .9em/1 Rajdhani,system-ui,sans-serif;text-shadow:none;flex:none}'+
  '.psg svg{width:72%;height:72%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}'+
  '.psg.psa{color:#8ab4ff}.psg.psb{color:#ff6b7a}.psg.psx{color:#ff8fd0}.psg.psy{color:#4fe0b0}.psg.xba{color:#62d962}.psg.xbb{color:#ff5a5a}.psg.xbx{color:#4ea3ff}.psg.xby{color:#ffd23d}.psg.kb{width:auto;height:1.7em;border-radius:.35em;padding:0 .4em;color:#f6f3ff;font-size:.75em}'+
- '#aphint{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));z-index:70;display:none;font-size:max(13px,2.6vh);color:var(--tx);opacity:.9;text-shadow:0 1px 3px #000;pointer-events:none;white-space:nowrap}';document.head.appendChild(css);
+ '#aphint{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));z-index:70;display:none;font-size:max(13px,2.6vh);color:var(--tx);opacity:.9;text-shadow:0 1px 3px #000;pointer-events:none;white-space:nowrap}'+
+ 'body.appz #tp,body.apnog #tbP{visibility:hidden}';document.head.appendChild(css);
  const mk=(t,id,h)=>{const e=document.createElement(t);e.id=id;if(h)e.innerHTML=h;document.body.appendChild(e);return e};
  const mu=mk('button','apmu');mu.tabIndex=-1;mu.title=TX.mute;mu.setAttribute('aria-label',TX.mute);mu.addEventListener('mousedown',e=>e.preventDefault());mu.onclick=e=>{e.stopPropagation();apMute()};
  const ve=mk('small','apver');ve.textContent=VER;ve.onclick=()=>apCred(1);
@@ -688,7 +689,7 @@ if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceW
 /* Mauszeiger im laufenden Spiel ausblenden, bei Bewegung kurz zeigen; Stumm-Knopf nur in Menü/Pause; Version nur in Lobby/Menü */
 addEventListener('mousemove',()=>{apMT=performance.now()});
 setInterval(()=>{const g=apInGame(),h=g&&performance.now()-apMT>2000,r=document.documentElement;if(r.classList.contains('nocur')!==h){r.classList.toggle('nocur',h);try{flWin().document.documentElement.classList.toggle('nocur',h)}catch(_){}}
- $('apmu').classList.toggle('off',g);apPW();document.body.classList.toggle('apmenu',['menu','set','pre','hs'].includes(st));$('apver').classList.toggle('off',st!=='lobby'&&st!=='menu')},300);
+ $('apmu').classList.toggle('off',g);apPW();document.body.classList.toggle('apmenu',['menu','set','pre','hs'].includes(st));document.body.classList.toggle('appz',GAMEST.includes(st)&&apPaused());document.body.classList.toggle('apnog',!g);$('apver').classList.toggle('off',st!=='lobby'&&st!=='menu')},300);
  const gpb={},gpr={};
 const rStick=g=>g.mapping==='standard'?[g.axes[2]||0,g.axes[3]||0]:[0,0];
 function rsOn(g){const[x,y]=rStick(g),m=Math.hypot(x,y);if(!gpr[g.index]&&m>.6)gpr[g.index]=1;else if(gpr[g.index]&&m<.35)gpr[g.index]=0;return !!gpr[g.index]}
