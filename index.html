@@ -575,7 +575,7 @@ setInterval(()=>{let ch=false;for(const id in P)if(!fixed(id)&&Date.now()-P[id].
 /* ===== Grundausstattung (wie in den anderen Spielen): Ton aus beim Verlassen, Stumm-Knopf, Fehleranzeige, Wake Lock,
    Zurück-Taste, Vollbild, Dreh-Hinweis, Mauszeiger ausblenden, Version + Credits. Texte zentral in TX.
    var statt let/const: pollPads() und push1() laufen schon, bevor dieser Block erreicht ist. ===== */
-var VER='v2026-11-23e';
+var VER='v2026-11-23f';
 var TX={gfxL:'Grafik',gfx:['Auto','Niedrig','Mittel','Hoch'],hOk:'{A} OK · {B} Zurück',hPz:'{A} Wählen · {B} Weiterspielen',hcOk:'Alle drücken {A}, wenn sie die Steuerung kennen',bkYes:'Ja, zurück · {A}',bkNo:'Nein · {B}',rmA:'↻ Nochmal · {A}',rmB:'Menü · {B}',tfin:'Zurück zum Menü in ein paar Sekunden · {A}',resT:'Es geht gleich weiter…',resV:'Abstimmung: {A} = nochmal · {B} = Menü · es zählt die Mehrheit',rsq:'Wirklich neu starten? · {A}',trs:' · ◀ ▶ wählen · {A} bestätigen',boSel:'◀ ▶ wählen · {A} bestätigen · {B} ändern',boHold:'🛡 {A} halten!',
  mute:'Ton an/aus (M)',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'<b>Arcade Party</b> '+VER+'<br>Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts)<br>QR-Code: qrcodejs (davidshimjs)<br>Handy-Verbindung: PeerJS (peerjs.com)<br><small>Tippen zum Schließen</small>'};
