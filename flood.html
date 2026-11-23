@@ -246,7 +246,7 @@ function updPlayer(p,dt){if(!p.alive)return;
  if(p.air<=0){pop(p.x,p.y-14,'Ertrunken!','120,220,255');burst(p.x+p.w/2,p.y+p.h/2,24,200,'180,240,255',5,.8,0,'glow');kill(p,true);return}
  if(p.y>H-8){burst(p.x+p.w/2,H-14,26,320,'140,235,245',6,.8,800,'glow');sfx('thud');kill(p,true)}}
 
-/* ---------- Fall-Guys-Animationen ---------- */
+/* ---------- Watschel-Animationen ---------- */
 function anArm(A,p,k,sw){
  if(A.cheer)return -3+Math.sin(time*22+k*2)*3;
  if(A.panic)return -4+Math.sin(time*34+k*2.2)*4;
@@ -810,7 +810,7 @@ function menuPad(){const ps=pads();if(!ps.length)return;
    else if(edge('b')&&!locked){if(state==='pause')togglePause();else{const back=bs.find(x=>x.dataset.a==='main'||x.dataset.a==='back');if(back)back.click()}}}}
  pPrev=cur}
 let last=performance.now();
-function loop(now){const dt=Math.min(.033,(now-last)/1000);last=now;time+=dt;if(state==='menu'){requestAnimationFrame(loop);return}phoneTick();musicTick();if(state==='pause')refreshPause();touchUI();menuPad();update(slow>0?dt*.35:dt);slow=Math.max(0,slow-dt);draw();requestAnimationFrame(loop)}
+function loop(now){const dt=Math.min(.033,(now-last)/1000);last=now;const fz=state==='pause'||(state==='menu'&&window.APHOLD);if(!fz)time+=dt;if(state==='menu'){requestAnimationFrame(loop);return}phoneTick();musicTick();if(state==='pause')refreshPause();touchUI();menuPad();if(!fz){update(slow>0?dt*.35:dt);slow=Math.max(0,slow-dt)}draw();requestAnimationFrame(loop)}
 addEventListener('resize',()=>{if(state==='play'&&matchMedia('(orientation:portrait) and (pointer:coarse)').matches)pauseGame('Bitte das Handy quer halten.')});
 requestAnimationFrame(loop);
 
