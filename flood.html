@@ -57,19 +57,25 @@ html,body{height:100dvh;overscroll-behavior:none;touch-action:manipulation;-webk
 <body>
 <div id="stage"><canvas id="c"></canvas>
 <div id="ui">
- <div class="panel" id="p-over" hidden><h2>Überschwemmt!</h2><div class="big" id="o-score">0</div><p id="o-note"></p>
-  <button data-a="next">Weiter</button></div>
- <div class="panel" id="p-pause" hidden><h2>Pause</h2><p id="pz-note"></p>
-  <button id="b-resume" data-a="resume">Weiter</button><button class="alt" id="b-drop" data-a="drop" hidden>Ohne sie weiter</button><button class="alt" data-a="restart">Neustart</button><button class="ghost" data-a="main">Zum Menü</button></div>
+ <div class="panel" id="p-over" hidden><h2 data-t="over">Überschwemmt!</h2><div class="big" id="o-score">0</div><p id="o-note"></p>
+  <button data-a="next" data-t="next">Weiter</button></div>
+ <div class="panel" id="p-pause" hidden><h2 data-t="pause">Pause</h2><p id="pz-note"></p>
+  <button id="b-resume" data-a="resume" data-t="next">Weiter</button><button class="alt" id="b-drop" data-a="drop" hidden data-t="drop">Ohne sie weiter</button><button class="alt" data-a="restart" data-t="restart">Neustart</button><button class="ghost" data-a="main" data-t="menu">Zum Menü</button></div>
 </div>
 <div id="tc" hidden>
  <div class="tb" id="tl" data-k="l">◀</div><div class="tb" id="tr" data-k="r">▶</div>
- <div class="tb" id="ta" data-k="a">Greifen</div><div class="tb" id="tj" data-k="j">Sprung</div>
+ <div class="tb" id="ta" data-k="a" data-t="grab">Greifen</div><div class="tb" id="tj" data-k="j" data-t="jump">Sprung</div>
  <div class="tb" id="te" data-k="e">♥</div><div class="tb" id="tz" data-k="pz">II</div>
 </div></div>
-<div id="rot"><b>↻</b>Bitte das Handy quer halten.</div>
+<div id="rot"><b>↻</b><span data-t="rot">Bitte das Handy quer halten.</span></div>
 <script>
 var FXQ=1,PRQ=1,FK=1; /* von der Hauptseite gesetzt: Glühfaktor, Pixel-Ratio; FK = Canvas-Skalierung */
+/* Texte zentral (für späteres Englisch, 24.11.2026). Elemente mit data-t werden beim Start aus FT gefüllt. */
+const FT={over:'Überschwemmt!',next:'Weiter',pause:'Pause',drop:'Ohne sie weiter',restart:'Neustart',menu:'Zum Menü',grab:'Greifen',jump:'Sprung',rot:'Bitte das Handy quer halten.',blur:'Fenster nicht aktiv.',
+ hints:['Spieler 1: A D W + S','Spieler 2: ← → ↑ + ↓','Spieler 3: J L I + K','Spieler 4: Num 4 6 8 + 5','','','',''],names:['Rot','Cyan','Grün','Pink','Gelb','Orange','Lila','Weiß'],
+ shield:'Schild kaputt',rising:'Das Wasser steigt! Klettere nach oben.',pl:'Spieler ',back:' ist zurück!',capLost:'Kapsel verloren',newRec:'Neuer Rekord!',best:'Beste Punktzahl: ',pts:'Punkte ',
+ hTouch:'◀ ▶ laufen · Sprung-Taste springen · ♥ Emote',hKb:'A / D oder ← / → laufen · W, ↑ oder Leertaste springen · E Emote',others:'× Controller/Handy/Touch',lostA:'Verbindung verloren: ',lostB:'. Das Handy verbindet sich von selbst wieder.',paused:'Das Spiel ist angehalten.',pby:' hat pausiert.',rsq:'Wirklich neu starten?'};
+document.querySelectorAll('[data-t]').forEach(e=>{e.textContent=FT[e.dataset.t]});
 const W=1280,H=720,S=44,MAXG=800;
 const cv=document.getElementById('c');let ctx=cv.getContext('2d');cv.width=W;cv.height=H;
 const $=id=>document.getElementById(id);
@@ -116,7 +122,7 @@ const drops=Array.from({length:170},()=>({x:Math.random()*W,y:Math.random()*H,l:
 const down=a=>a.some(k=>keys[k]);
 addEventListener('keydown',e=>{keys[e.code]=true;try{parent.fKey(e,1)}catch(_){}if(state==='play'&&!e.repeat){const k=EK.indexOf(e.code);if(k>=0){const p=mode===1?players[0]:players.find(z=>z.i===k);if(p&&p.pad==null)emote(p)}}if(/^(Arrow|Space)/.test(e.code))e.preventDefault();if((e.code==='Escape'||e.code==='KeyP')&&!e.repeat){if(state==='play')pauseGame('');else if(state==='pause')togglePause()}});
 addEventListener('keyup',e=>{keys[e.code]=false;try{parent.fKey(e,0)}catch(_){}});
-addEventListener('blur',()=>{for(const k in keys)keys[k]=false;if(state==='play')pauseGame('Fenster nicht aktiv.')});
+addEventListener('blur',()=>{for(const k in keys)keys[k]=false;if(state==='play')pauseGame(FT.blur)});
 
 /* ---------- Ton ---------- */
 let ac;function initAudio(){if(!ac){try{ac=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ac&&ac.state==='suspended')ac.resume()}
@@ -151,7 +157,7 @@ function musicTick(){if(!ac||!cfg.sound||!cfg.music||state!=='play'){MUS.next=0;
 let warned=0,items=[],texts=[],bonus=0,slow=0,hail=0,nextHail=22,nextItem=6;
 const sc=()=>Math.floor(t*10)+bonus;
 let slots=[],caps=[],ghosts=[];
-const PRGB=['255,46,77','34,228,255','57,255,106','255,79,216','255,225,60','255,140,40','170,110,255','235,240,255','61,123,255','198,255,61','194,122,61','25,230,180','255,176,138','207,60,255','74,70,104','234,161,0'],NAMES=['Rot','Cyan','Grün','Pink','Gelb','Orange','Lila','Weiß'],HINTS=['Spieler 1: A D W + S','Spieler 2: ← → ↑ + ↓','Spieler 3: J L I + K','Spieler 4: Num 4 6 8 + 5','','','',''];
+const PRGB=['255,46,77','34,228,255','57,255,106','255,79,216','255,225,60','255,140,40','170,110,255','235,240,255','61,123,255','198,255,61','194,122,61','25,230,180','255,176,138','207,60,255','74,70,104','234,161,0'],NAMES=FT.names,HINTS=FT.hints;
 const CTL=[[['KeyA'],['KeyD'],['KeyW','Space'],['KeyS']],[['ArrowLeft'],['ArrowRight'],['ArrowUp'],['ArrowDown']],[['KeyJ'],['KeyL'],['KeyI'],['KeyK']],[['Numpad4'],['Numpad6'],['Numpad8'],['Numpad5']]];
 const EK=['KeyE','ShiftRight','KeyO','Numpad9'];
 const TB={l:0,r:0,j:0,a:0,e:0},TBL={l:0,r:0,j:0,a:0};
@@ -159,7 +165,7 @@ function vib(p,pat){if(p&&typeof p.pad==='number'&&(Array.isArray(pat)||pat>=30)
 function emote(p,e){if(!e||!p.alive||state!=='play'||(p.em&&p.em.t<.4))return;p.em={k:'emo',e:e||p.emo||'😂',t:0};burst(p.x+p.w/2,p.y-6,8,120,'255,210,90',4,.7,0,'glow');sfx('emote')}
 function emoteEmoji(id,e){const p=players.find(q=>q.pad==='ph:'+id);if(p)emote(p,e)}
 const crowd=n=>1+.16*Math.min(n-1,3)+.1*Math.max(0,n-4);
-function hintLine(){const kb=slots.filter(q=>q.pad==null).map(q=>HINTS[q.i]).filter(Boolean),o=slots.length-kb.length;if(o)kb.push(o+'× Controller/Handy/Touch');return kb.join('   ·   ')}
+function hintLine(){const kb=slots.filter(q=>q.pad==null).map(q=>HINTS[q.i]).filter(Boolean),o=slots.length-kb.length;if(o)kb.push(o+FT.others);return kb.join('   ·   ')}
 function pop(x,y,s,c,sz){sz=sz||1;texts.push({x,y,s,c,sz,life:sz>1?2.2:1.2})}
 function mkP(i,x,solo){const w=26,h=38;let top=1e9;for(let k=x|0;k<=(x+w|0);k++)top=Math.min(top,gAt(k));
  return{i,x,y:top-h,w,h,vx:0,vy:0,on:true,dir:1,alive:true,deathT:0,air:5,col:'rgb('+PRGB[i]+')',rgb:PRGB[i],
@@ -169,7 +175,7 @@ function startGame(sl){slots=sl.slice().sort((a,b)=>a.i-b.i);const n=slots.lengt
 function burst(x,y,n,spd,c,s,life,gr,k){for(let i=0;i<n;i++){const a=Math.random()*6.283,v=Math.random()*spd,L=life*(.6+Math.random()*.4);
  parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-spd*.25,life:L,max:L,s:s*(.6+Math.random()*.8),c,g:gr,k})}}
 function debris(x,y){burst(x,y,10,260,'140,125,255',5,.9,900,'wood')}
-function kill(p,force){if(!force&&(p.inv>0||p.shield>0)){if(p.inv>0)return;p.shield=0;p.inv=1.3;if(p.an){p.an.lv+=(Math.random()<.5?-1:1)*6;p.an.sq=.5}vib(p,40);burst(p.x+p.w/2,p.y+p.h/2,18,300,'120,240,255',6,.5,0,'glow');pop(p.x,p.y-14,'Schild kaputt','120,240,255');shake=Math.max(shake,6);return}p.alive=false;p.deathT=t;if(p.fd==null)p.fd=t;slow=.7;anGhost(p);vib(p,[60,40,180]);if(p.carry){p.carry.held=null;p.carry=null}if(p.held){p.held.carry=null;p.held=null}if(mode>1&&!force)caps.push({i:p.i,rgb:p.rgb,x:p.x+p.w/2,y:p.y+p.h/2,vy:0,prog:0,life:15,tm:p.tm||0});burst(p.x+p.w/2,p.y+p.h/2,26,320,p.rgb,5,.8,700,'wood');burst(p.x+p.w/2,p.y+p.h/2,10,180,'255,255,255',6,.5,0,'glow');shake=Math.max(shake,8)}
+function kill(p,force){if(!force&&(p.inv>0||p.shield>0)){if(p.inv>0)return;p.shield=0;p.inv=1.3;if(p.an){p.an.lv+=(Math.random()<.5?-1:1)*6;p.an.sq=.5}vib(p,40);burst(p.x+p.w/2,p.y+p.h/2,18,300,'120,240,255',6,.5,0,'glow');pop(p.x,p.y-14,FT.shield,'120,240,255');shake=Math.max(shake,6);return}p.alive=false;p.deathT=t;if(p.fd==null)p.fd=t;slow=.7;anGhost(p);vib(p,[60,40,180]);if(p.carry){p.carry.held=null;p.carry=null}if(p.held){p.held.carry=null;p.held=null}if(mode>1&&!force)caps.push({i:p.i,rgb:p.rgb,x:p.x+p.w/2,y:p.y+p.h/2,vy:0,prog:0,life:15,tm:p.tm||0});burst(p.x+p.w/2,p.y+p.h/2,26,320,p.rgb,5,.8,700,'wood');burst(p.x+p.w/2,p.y+p.h/2,10,180,'255,255,255',6,.5,0,'glow');shake=Math.max(shake,8)}
 function spawnCrate(){const r=Math.random(),pL=Math.min(.2,t/500),p2=Math.min(.5,.1+t/200);
  const sz=r<pL?S*3:r<pL+p2?S*2:S;let k='n';if(sz<S*3){const q=Math.random();if(q<Math.min(.1,t/300))k='x';else if(q<.16)k='g'}
  crates.push({x:Math.round(Math.random()*(W-sz)),y:-sz,vy:0,s:sz,k})}
@@ -298,7 +304,7 @@ function update(dt){
  for(let i=ghosts.length-1;i>=0;i--){const g=ghosts[i];g.life-=dt;if(g.life<=0){ghosts.splice(i,1);continue}g.vy+=g.g*dt;if(g.dm)g.vy*=Math.exp(-dt*g.dm);g.o.x+=g.vx*dt;g.o.y+=g.vy*dt;g.o.an.rot+=g.tv*dt}
  if(state!=='play')return;
  if(players.some(p=>p.alive)){t+=dt}else{endT+=dt;if(endT>1.5)gameOver()}
- wl=Math.max(110,692-t*1.6-t*t*.008);if(!warned&&wl<650){warned=1;pop(W/2,220,'Das Wasser steigt! Klettere nach oben.','120,240,255',1.3)}
+ wl=Math.max(110,692-t*1.6-t*t*.008);if(!warned&&wl<650){warned=1;pop(W/2,220,FT.rising,'120,240,255',1.3)}
  const f=DIFF[cfg.diff].f/crowd(players.length);
  if((nextCrate-=dt)<=0){spawnCrate();nextCrate=Math.max(.3,2.4-t/58)*f}
  if((nextRocket-=dt)<=0){const al=players.filter(p=>p.alive),big=t>45&&Math.random()<.3;let x=Math.random()*W;
@@ -314,8 +320,8 @@ function update(dt){
  for(let i=caps.length-1;i>=0;i--){const c=caps[i],fy=gAt(c.x)-12;c.life-=dt;c.vy=Math.min(c.vy+900*dt,500);c.y=Math.min(c.y+c.vy*dt,fy);if(c.y>=fy)c.vy=0;
   let near=false;for(const p of players)if(p.alive&&Math.abs(p.x+p.w/2-c.x)<36&&Math.abs(p.y+p.h/2-c.y)<44&&Math.abs(p.vx)<1&&(!c.tm||p.tm===c.tm)){near=true;c.rv=p}
   c.prog=near?c.prog+dt/2.5:Math.max(0,c.prog-dt*.5);
-  if(c.prog>=1){const q=players.find(z=>z.i===c.i);if(q){try{parent.stPad(c.rv&&c.rv.pad,'r')}catch(_){}q.alive=true;q.air=5;q.vx=0;q.vy=0;q.x=c.x-q.w/2;q.y=c.y-q.h/2-8;q.inv=2;q.shield=0;if(q.an){q.an.pop=.4;q.an.sq=-1;q.an.tum=0;q.an.rot=0;q.an.pvy=0;q.an.pon=0}vib(q,[30,40,30,40,70]);burst(c.x,c.y,26,300,q.rgb,5,.7,0,'glow');pop(q.x,q.y-14,'Spieler '+(q.i+1)+' ist zurück!',q.rgb)}caps.splice(i,1);continue}
-  if(c.life<=0||c.y>wl+4){pop(c.x,c.y-14,'Kapsel verloren','255,120,120');burst(c.x,c.y,14,200,'255,255,255',4,.5,0,'glow');caps.splice(i,1)}}
+  if(c.prog>=1){const q=players.find(z=>z.i===c.i);if(q){try{parent.stPad(c.rv&&c.rv.pad,'r')}catch(_){}q.alive=true;q.air=5;q.vx=0;q.vy=0;q.x=c.x-q.w/2;q.y=c.y-q.h/2-8;q.inv=2;q.shield=0;if(q.an){q.an.pop=.4;q.an.sq=-1;q.an.tum=0;q.an.rot=0;q.an.pvy=0;q.an.pon=0}vib(q,[30,40,30,40,70]);burst(c.x,c.y,26,300,q.rgb,5,.7,0,'glow');pop(q.x,q.y-14,FT.pl+(q.i+1)+FT.back,q.rgb)}caps.splice(i,1);continue}
+  if(c.life<=0||c.y>wl+4){pop(c.x,c.y-14,FT.capLost,'255,120,120');burst(c.x,c.y,14,200,'255,255,255',4,.5,0,'glow');caps.splice(i,1)}}
  const blasts=[],landed=[];
  for(const c of crates){const z=c.s;let fl=1e9;for(let x=Math.max(0,c.x|0);x<=Math.min(W-1,(c.x+z)|0);x+=2)fl=Math.min(fl,gAt(x));
   c.vy=Math.min(c.vy+1400*dt,560);let ny=c.y+c.vy*dt;
@@ -334,7 +340,7 @@ function update(dt){
 function best(){return bestVal}
 let overAt=0,pPrev={};
 function gameOver(){state='over';overAt=time;const s=sc(),rec=s>bestVal;
- $('o-score').textContent=s;let note=rec&&s>0?'Neuer Rekord!':'Beste Punktzahl: '+bestVal;
+ $('o-score').textContent=s;let note=rec&&s>0?FT.newRec:FT.best+bestVal;
  if(mode>1)note='Teamleistung! '+note;
  $('o-note').textContent=note;show('over')}
 
@@ -754,10 +760,10 @@ function draw(){ctx.setTransform(FK,0,0,FK,0,0);ctx.save();ctx.drawImage(bg,0,0)
  if(cfg.rain){ctx.strokeStyle='rgba(130,190,255,.45)';ctx.lineWidth=1.5;ctx.beginPath();for(const d of drops){ctx.moveTo(d.x,d.y);ctx.lineTo(d.x-d.l*.16,d.y-d.l)}ctx.stroke()}
  ctx.restore();
  if(state==='play'||state==='pause'||state==='over'){ctx.textAlign='left';ctx.font='700 40px Rajdhani,sans-serif';ctx.lineWidth=6;ctx.strokeStyle='rgba(10,0,30,.7)';ctx.fillStyle='#fff';
-  const s='Punkte '+sc();ctx.strokeText(s,24,52);ctx.fillText(s,24,52);ctx.font='500 20px Rajdhani,sans-serif';const b='Beste: '+Math.max(best(mode),sc());ctx.strokeText(b,26,80);ctx.fillText(b,26,80);
-  if(mode>1){ctx.textAlign='right';ctx.font='700 22px Rajdhani,sans-serif';players.forEach((p,i)=>{ctx.fillStyle=p.alive?p.col:'rgba(255,255,255,.4)';ctx.strokeText('Spieler '+(p.i+1)+(p.alive?'':' ✕'),W-24,40+i*30);ctx.fillText('Spieler '+(p.i+1)+(p.alive?'':' ✕'),W-24,40+i*30)})}
+  const s=FT.pts+sc();ctx.strokeText(s,24,52);ctx.fillText(s,24,52);ctx.font='500 20px Rajdhani,sans-serif';const b='Beste: '+Math.max(best(mode),sc());ctx.strokeText(b,26,80);ctx.fillText(b,26,80);
+  if(mode>1){ctx.textAlign='right';ctx.font='700 22px Rajdhani,sans-serif';players.forEach((p,i)=>{ctx.fillStyle=p.alive?p.col:'rgba(255,255,255,.4)';ctx.strokeText(FT.pl+(p.i+1)+(p.alive?'':' ✕'),W-24,40+i*30);ctx.fillText(FT.pl+(p.i+1)+(p.alive?'':' ✕'),W-24,40+i*30)})}
   if(state==='play'&&t<7){ctx.globalAlpha=Math.min(1,(7-t)/2);ctx.textAlign='center';ctx.font='500 22px Rajdhani,sans-serif';ctx.fillStyle='#fff';
-   const h=mode===1?(players[0]&&players[0].pad==='touch'?'◀ ▶ laufen · Sprung-Taste springen · ♥ Emote':'A / D oder ← / → laufen · W, ↑ oder Leertaste springen · E Emote'):hintLine();ctx.strokeText(h,W/2,H-40);ctx.fillText(h,W/2,H-40);ctx.globalAlpha=1}}}
+   const h=mode===1?(players[0]&&players[0].pad==='touch'?FT.hTouch:FT.hKb):hintLine();ctx.strokeText(h,W/2,H-40);ctx.fillText(h,W/2,H-40);ctx.globalAlpha=1}}}
 
 /* ---------- Menü ---------- */
 const panels=['over','pause'];
@@ -766,16 +772,16 @@ const phones={};
 const lostPh=p=>typeof p.pad==='string'&&p.pad.slice(0,3)==='ph:'&&(!phones[p.pad.slice(3)]||time-phones[p.pad.slice(3)].seen>3);
 const lostPlayers=()=>players.filter(p=>p.alive&&lostPh(p));
 let pauseWhy='';
-function pauseGame(why){if(state!=='play')return;state='pause';{const r=document.querySelector('[data-a=restart]');if(r){r.dataset.q='';r.textContent='Neustart'}}pauseWhy=why||'';refreshPause();show('pause')}
+function pauseGame(why){if(state!=='play')return;state='pause';{const r=document.querySelector('[data-a=restart]');if(r){r.dataset.q='';r.textContent=FT.restart}}pauseWhy=why||'';refreshPause();show('pause')}
 function resumeGame(){if(state!=='pause')return;state='play';show(null)}
 function togglePause(){if(state==='play')pauseGame('');else if(state==='pause'&&!$('b-resume').disabled)resumeGame()}
 function dropLost(){players.filter(lostPh).forEach(p=>{if(p.alive)kill(p,true);p.pad=null});refreshPause()}
-function refreshPause(){const l=lostPlayers();$('b-resume').disabled=l.length>0;$('b-drop').hidden=!l.length;$('pz-note').textContent=l.length?'Verbindung verloren: '+l.map(p=>NAMES[p.i]).join(', ')+'. Das Handy verbindet sich von selbst wieder.':(pauseWhy||'Das Spiel ist angehalten.')}
-function phoneIn(id,bits){let ph=phones[id];if(!ph)ph=phones[id]={bits:0,seen:0};const pz=(bits&16)&&!(ph.bits&16);ph.bits=bits;ph.seen=time;if(pz){if(state==='play'){const q=players.find(p=>p.pad==='ph:'+id);pauseGame(q?NAMES[q.i]+' hat pausiert.':'')}else togglePause()}}
+function refreshPause(){const l=lostPlayers();$('b-resume').disabled=l.length>0;$('b-drop').hidden=!l.length;$('pz-note').textContent=l.length?FT.lostA+l.map(p=>NAMES[p.i]).join(', ')+FT.lostB:(pauseWhy||FT.paused)}
+function phoneIn(id,bits){let ph=phones[id];if(!ph)ph=phones[id]={bits:0,seen:0};const pz=(bits&16)&&!(ph.bits&16);ph.bits=bits;ph.seen=time;if(pz){if(state==='play'){const q=players.find(p=>p.pad==='ph:'+id);pauseGame(q?NAMES[q.i]+FT.pby:'')}else togglePause()}}
 function phoneTick(){if(state==='play'&&lostPlayers().length)pauseGame('');for(const id in phones)if(time-phones[id].seen>6)delete phones[id]}
 $('ui').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;initAudio();const a=b.dataset.a;
  if(a==='resume')resumeGame();else if(a==='drop')dropLost();
- else if(a==='restart'){if(b.dataset.q){b.dataset.q='';b.textContent='Neustart';try{parent.floodRestart()}catch(_){}}else{b.dataset.q='1';b.textContent='Wirklich neu starten?'}}
+ else if(a==='restart'){if(b.dataset.q){b.dataset.q='';b.textContent=FT.restart;try{parent.floodRestart()}catch(_){}}else{b.dataset.q='1';b.textContent=FT.rsq}}
  else if(a==='main'){state='menu';show(null)}
  else if(a==='next'){try{parent.floodEnd()}catch(_){}}});
 document.querySelectorAll('#tc .tb').forEach(e=>{const k=e.dataset.k;
@@ -812,7 +818,7 @@ function menuPad(){const ps=pads();if(!ps.length)return;
  pPrev=cur}
 let last=performance.now();
 function loop(now){const dt=Math.min(.033,(now-last)/1000);last=now;const fz=state==='pause'||(state==='menu'&&window.APHOLD);if(!fz)time+=dt;if(state==='menu'){requestAnimationFrame(loop);return}phoneTick();musicTick();if(state==='pause')refreshPause();touchUI();menuPad();if(!fz){update(slow>0?dt*.35:dt);slow=Math.max(0,slow-dt)}draw();requestAnimationFrame(loop)}
-addEventListener('resize',()=>{if(state==='play'&&matchMedia('(orientation:portrait) and (pointer:coarse)').matches)pauseGame('Bitte das Handy quer halten.')});
+addEventListener('resize',()=>{if(state==='play'&&matchMedia('(orientation:portrait) and (pointer:coarse)').matches)pauseGame(FT.rot)});
 requestAnimationFrame(loop);
 
 /* ---------- Schnittstelle fuer die Hauptseite (ersetzt eval von aussen) ---------- */
