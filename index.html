@@ -1,6 +1,6 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>Arcade Party</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#17123a"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><title>Arcade Party</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#17123a"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"></head><body>
 <!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1"><title>Arcade Party</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>Arcade Party</title>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -211,7 +211,7 @@ body.apmenu #tp{display:none}
 <iframe id="fl" allow="autoplay *; gamepad *"></iframe>
 <script>
 /* Texte zentral (für späteres Englisch): TX (Grundausstattung, Hinweise) + TX_UI (Menüs, Spielnamen) */
-var VER='v2026-11-24g';
+var VER='v2026-11-24h';
 var TX={gfxL:'Grafik',gfx:['Auto','Niedrig','Mittel','Hoch'],hOk:'{A} OK · {B} Zurück',hPz:'{A} Wählen · {B} Weiterspielen',hcOk:'Alle drücken {A}, wenn sie die Steuerung kennen',bkYes:'Ja, zurück · {A}',bkNo:'Nein · {B}',rmA:'↻ Nochmal · {A}',rmB:'Menü · {B}',tfin:'Zurück zum Menü in ein paar Sekunden · {A}',resT:'Es geht gleich weiter…',resV:'Abstimmung: {A} = nochmal · {B} = Menü · es zählt die Mehrheit',rsq:'Wirklich neu starten? · {A}',trs:' · ◀ ▶ wählen · {A} bestätigen',boSel:'◀ ▶ wählen · {A} bestätigen · {B} ändern',boHold:'🛡 {A} halten!',
  mute:'Ton an/aus (M)',fs:'Vollbild an/aus',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'<b>Arcade Party</b> '+VER+'<br>Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts)<br>QR-Code: qrcodejs (davidshimjs)<br>Handy-Verbindung: PeerJS (peerjs.com)<br><small>Tippen zum Schließen</small>'};
@@ -664,7 +664,7 @@ function apGp(gs){const cr=$('apcr'),co=cr&&cr.style.display==='flex';for(const 
  '#aprot{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;text-align:center;background:#17123a;color:#fff;font-size:7vmin;line-height:1.4}'+
  '@media (orientation:portrait){html.aptouch #aprot{display:flex}}'+
  '#aperr{position:fixed;left:max(6px,env(safe-area-inset-left,0px));bottom:max(6px,env(safe-area-inset-bottom,0px));max-width:70vw;z-index:110;display:none;background:#b00020e6;color:#fff;font:12px/1.3 system-ui,sans-serif;padding:4px 8px;border-radius:6px;pointer-events:none}'+
- 'html.nocur,html.nocur *{cursor:none!important}'+
+ 'html.nocur,html.nocur *{cursor:none!important}html{touch-action:manipulation}'+
  '.psg{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;width:1.5em;height:1.5em;border-radius:50%;background:#0b0820;border:.1em solid currentColor;vertical-align:middle;position:relative;top:-.08em;margin:0 .08em;font:700 .9em/1 Rajdhani,system-ui,sans-serif;text-shadow:none;flex:none}'+
  '.psg svg{width:72%;height:72%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}'+
  '.psg.psa{color:#8ab4ff}.psg.psb{color:#ff6b7a}.psg.psx{color:#ff8fd0}.psg.psy{color:#4fe0b0}.psg.xba{color:#62d962}.psg.xbb{color:#ff5a5a}.psg.xbx{color:#4ea3ff}.psg.xby{color:#ffd23d}.psg.kb{width:auto;height:1.7em;border-radius:.35em;padding:0 .4em;color:#f6f3ff;font-size:.75em}'+
@@ -676,6 +676,8 @@ function apGp(gs){const cr=$('apcr'),co=cr&&cr.style.display==='flex';for(const 
  const ve=mk('small','apver');ve.textContent=VER;ve.onclick=()=>apCred(1);
  mk('div','apcr',TX.credits).onclick=()=>apCred(0);mk('div','aprot',TX.rot);mk('div','aperr');mk('div','aphint');apMuIcon();
  if(TOUCHDEV)document.documentElement.classList.add('aptouch')}
+/* Zoom sperren (Zwei-Finger-Zoom, iOS-Gesten), Touch-Tasten ausgenommen */
+document.addEventListener('touchmove',e=>{if(e.touches.length>1&&!(e.target.closest&&e.target.closest('#tp')))e.preventDefault()},{passive:false});document.addEventListener('gesturestart',e=>e.preventDefault());
 /* Fehleranzeige am Bildschirmrand (auch für Fehler im Flood-iframe) */
 function apErr(t){if(++apErrN>30)return;const e=$('aperr');if(!e)return;e.textContent=TX.err+String(t).slice(0,180);e.style.display='block';clearTimeout(apErr.t);apErr.t=setTimeout(()=>e.style.display='none',9000)}
 function apErrHook(w){w.addEventListener('error',e=>{if(e&&e.message)apErr(e.message+(e.lineno?' ('+TX.line+e.lineno+')':''))});w.addEventListener('unhandledrejection',e=>{const r=e&&e.reason;apErr(r&&r.message||r||'Promise')})}
