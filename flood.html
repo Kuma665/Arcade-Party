@@ -69,13 +69,13 @@ html,body{height:100dvh;overscroll-behavior:none;touch-action:manipulation;-webk
 </div></div>
 <div id="rot"><b>↻</b>Bitte das Handy quer halten.</div>
 <script>
-var FXQ=1;
+var FXQ=1,PRQ=1,FK=1; /* von der Hauptseite gesetzt: Glühfaktor, Pixel-Ratio; FK = Canvas-Skalierung */
 const W=1280,H=720,S=44,MAXG=800;
 const cv=document.getElementById('c');let ctx=cv.getContext('2d');cv.width=W;cv.height=H;
 const $=id=>document.getElementById(id);
 const DIFF=[{n:'Leicht',f:1.4},{n:'Normal',f:1},{n:'Schwer',f:.72}];
 let cfg={sound:true,music:true,vib:true,rain:true,diff:1},bestVal=0;
-function fit(){const st=$('stage'),s=Math.min(st.clientWidth/W,st.clientHeight/H);cv.style.width=W*s+'px';cv.style.height=H*s+'px'}
+function fit(){const st=$('stage'),s=Math.min(st.clientWidth/W,st.clientHeight/H);cv.style.width=W*s+'px';cv.style.height=H*s+'px';const k=Math.min(2.5,Math.max(.4,s*PRQ)),cw=Math.round(W*k),chh=Math.round(H*k);if(cv.width!==cw||cv.height!==chh){cv.width=cw;cv.height=chh}FK=k}
 addEventListener('resize',fit);fit();
 
 /* ---------- Hintergrund (einmal vorgerendert) ---------- */
@@ -725,7 +725,7 @@ function playerDraw(p){if(!p.alive)return;ctx.save();ctx.translate(p.x,p.y);
 function capDraw(c){if(c.life<6&&Math.floor(time*8)%2)return;const rgb=c.rgb||PRGB[c.i];ctx.save();ctx.translate(c.x,c.y+Math.sin(time*4+c.i)*2);ctx.shadowColor='rgb('+rgb+')';ctx.shadowBlur=18*FXQ;ctx.fillStyle='rgba('+rgb+',.35)';ctx.strokeStyle='rgb('+rgb+')';ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(-9,-16,18,32,9);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
  ctx.fillStyle='#fff';ctx.font='700 14px Rajdhani,sans-serif';ctx.textAlign='center';ctx.fillText(c.i+1,0,5);
  if(c.prog>0){ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,26,-Math.PI/2,-Math.PI/2+c.prog*6.283);ctx.stroke()}ctx.restore()}
-function draw(){ctx.save();ctx.drawImage(bg,0,0);
+function draw(){ctx.setTransform(FK,0,0,FK,0,0);ctx.save();ctx.drawImage(bg,0,0);
  const dn=state==='menu'?0:Math.min(1,t/150);
  if(dn>0){const rg=ctx.createLinearGradient(0,120,0,H);rg.addColorStop(0,'rgba(255,60,50,0)');rg.addColorStop(1,'rgba(255,60,50,'+(.34*dn)+')');ctx.fillStyle=rg;ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(3,0,16,'+(.5*dn)+')';ctx.fillRect(0,0,W,H)}
  if(flash>0){ctx.fillStyle='rgba(200,170,255,'+flash*.3+')';ctx.fillRect(0,0,W,H)}
