@@ -211,7 +211,7 @@ body.apmenu #tp{display:none}
 <iframe id="fl" allow="autoplay *; gamepad *"></iframe>
 <script>
 /* Texte zentral (für späteres Englisch): TX (Grundausstattung, Hinweise) + TX_UI (Menüs, Spielnamen) */
-var VER='v2026-11-24h';
+var VER='v2026-11-24i';
 var TX={gfxL:'Grafik',gfx:['Auto','Niedrig','Mittel','Hoch'],hOk:'{A} OK · {B} Zurück',hPz:'{A} Wählen · {B} Weiterspielen',hcOk:'Alle drücken {A}, wenn sie die Steuerung kennen',bkYes:'Ja, zurück · {A}',bkNo:'Nein · {B}',rmA:'↻ Nochmal · {A}',rmB:'Menü · {B}',tfin:'Zurück zum Menü in ein paar Sekunden · {A}',resT:'Es geht gleich weiter…',resV:'Abstimmung: {A} = nochmal · {B} = Menü · es zählt die Mehrheit',rsq:'Wirklich neu starten? · {A}',trs:' · ◀ ▶ wählen · {A} bestätigen',boSel:'◀ ▶ wählen · {A} bestätigen · {B} ändern',boHold:'🛡 {A} halten!',
  mute:'Ton an/aus (M)',fs:'Vollbild an/aus',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'<b>Arcade Party</b> '+VER+'<br>Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts)<br>QR-Code: qrcodejs (davidshimjs)<br>Handy-Verbindung: PeerJS (peerjs.com)<br><small>Tippen zum Schließen</small>'};
@@ -389,10 +389,13 @@ function drawPvs(){document.querySelectorAll('canvas.pv').forEach(c=>{const p=c.
 
 let BK=null;function bkNo(){BK=null;$('bk').style.display='none';push()}function bkOpen(p){BK=p.id;$('bkt').textContent=p.name+TX_UI.bkQ;$('bk').style.display='flex';beep(cfgG.sfx,0,440);push()}function bkYes(){BK=null;$('bk').style.display='none';list().forEach(p=>p.rd=p.id.startsWith('bot'));show('lobby')}
 const HCT=TX_UI.hct;
-let HG=null,HSEEN={};
+/* Anleitungskarte: erscheint, solange ein anwesender Mitspieler das Spiel noch nicht kennt. HKN[id][spiel]=1; Handy-Pads dauerhaft (pa_hc, max. 60), Controller/Tastatur nur pro Sitzung. HSEEN[i]=1 überspringt die Karte (Tests). */
+let HG=null,HSEEN={},HKN={};try{const o=JSON.parse(localStorage.getItem('pa_hc')||'{}');if(o&&typeof o==='object'&&!Array.isArray(o))for(const k in o)if(o[k]&&typeof o[k]==='object')HKN[k]=o[k]}catch(e){}
+const hgNeed=i=>!HSEEN[i]&&tipHum().some(p=>!(HKN[p.id]&&HKN[p.id][i]));
+function hgMark(i){for(const p of tipHum())(HKN[p.id]||(HKN[p.id]={}))[i]=1;try{const o={};Object.keys(HKN).filter(k=>!fixed(k)).slice(-60).forEach(k=>o[k]=HKN[k]);localStorage.setItem('pa_hc',JSON.stringify(o))}catch(e){}}
 function hgRender(){if(!HG)return;$('hcp').innerHTML=tipHum().map(p=>`<span style="--c:${COL[p.co]};padding:.2em .8em;border:2px solid var(--c);border-radius:999px;${HG.ok[p.id]?'background:var(--c);color:#111':'opacity:.6'}">${esc(p.name)} ${HG.ok[p.id]?'✔':'…'}</span>`).join('')}
 function hgOpen(i){HG={i,ok:{},t:Date.now()};$('hct').textContent=HCT[i][0];$('hcx').dataset.kx=HCT[i][1];$('hcx').innerHTML=apKx(HCT[i][1]);$('hc').style.display='flex';hgRender();push()}
-function hgDone(){if(!HG)return;const i=HG.i;HG=null;HSEEN[i]=1;$('hc').style.display='none';launch(i)}
+function hgDone(){if(!HG)return;const i=HG.i;HG=null;hgMark(i);$('hc').style.display='none';launch(i)}
 function hgIn(p,dn){if(p.id.startsWith('bot')||!dn(4))return;HG.ok[p.id]=1;beep(cfgG.sfx,0,659);hgRender();push1(p);if(tipHum().every(q=>HG.ok[q.id]))setTimeout(hgDone,500)}
 setInterval(()=>{if(HG&&Date.now()-HG.t>25000)hgDone()},1000);
 function show(s){if(BK&&s!=='menu'){BK=null;$('bk').style.display='none'}if(s==='menu'){tourClear();T=null}st=s;if(s!=='lobby'){stopCd();ned=null}$('fl').classList.toggle('on',s==='flood');document.querySelectorAll('section').forEach(e=>e.classList.toggle('on',e.id===s));$('mq').classList.toggle('on',s==='menu'&&mqOk===1);render();push()}
@@ -476,7 +479,7 @@ function preIn(k){const g=GAMES[pre.i],n=g.opts.length;
  else if(rc===n){if(k==='a'){saveC();return launch(pre.i)}}
  else{const o=g.opts[rc],s=gset[pre.i],d=k==='l'?-1:1;s[o.k]=(s[o.k]+d+o.v.length)%o.v.length;saveC()}
  render()}
-function launch(idx){TMON=teamsOn();if(idx===11)return startTourney();const i=idx===8?Math.floor(Math.random()*8):idx;lastG=i;if(HCT[i]&&!HSEEN[i]&&!HG&&tipHum().length)return hgOpen(i);if(i===0)return startFlood();if(i===1)return startBomber();if(i===2)return startSumo();if(i===3)return startRace();if(i===4)return startBoss();
+function launch(idx){TMON=teamsOn();if(idx===11)return startTourney();const i=idx===8?Math.floor(Math.random()*8):idx;lastG=i;if(HCT[i]&&!HG&&hgNeed(i))return hgOpen(i);if(i===0)return startFlood();if(i===1)return startBomber();if(i===2)return startSumo();if(i===3)return startRace();if(i===4)return startBoss();
  demo={t0:Date.now(),i,pz:0,pzi:0,rsq:0};$('dpz').classList.remove('on');cdL=-1;list().forEach(p=>p.taps=0);$('dt').textContent=GAMES[i][2]+' '+GAMES[i][0]+' (Platzhalter: Tipp-Duell)';
  show('demo');clearInterval(tmr);tmr=setInterval(tick,100)}
 /* ===== Spiel-Schnittstelle =====
