@@ -212,7 +212,7 @@ body.apmenu #tp{display:none}
 <iframe id="fl" allow="autoplay *; gamepad *"></iframe>
 <script>
 /* Texte zentral (für späteres Englisch): TX (Grundausstattung, Hinweise) + TX_UI (Menüs, Spielnamen) */
-var VER='v2026-11-26';
+var VER='v2026-11-26b';
 var TX={gfxL:'Grafik',gfx:['Auto','Niedrig','Mittel','Hoch'],hOk:'{A} OK · {B} Zurück',hPz:'{A} Wählen · {B} Weiterspielen',hcOk:'Alle drücken {A}, wenn sie die Steuerung kennen',bkYes:'Ja, zurück · {A}',bkNo:'Nein · {B}',rmA:'↻ Nochmal · {A}',rmB:'Menü · {B}',tfin:'Zurück zum Menü in ein paar Sekunden · {A}',resT:'Es geht gleich weiter…',resV:'Abstimmung: {A} = nochmal · {B} = Menü · es zählt die Mehrheit',rsq:'Wirklich neu starten? · {A}',trs:' · ◀ ▶ wählen · {A} bestätigen',boSel:'◀ ▶ wählen · {A} bestätigen · {B} ändern',boHold:'🛡 {A} halten!',
  mute:'Ton an/aus (M)',fs:'Vollbild an/aus',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'Ein Spiel von Arox Games · Entwickelt von Aram Simon<br><b>Arcade Party</b> '+VER+' · Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts) · QR-Code: qrcodejs (davidshimjs) · Handy-Verbindung: PeerJS (peerjs.com)'};
@@ -245,15 +245,15 @@ Object.assign(TX_UI,{teamN:['Team Rot','Team Blau','Team Grün','Team Gelb'],gHs
  edge:'⚠ Der Rand bricht weg!',sumoMin:'Sumo braucht mindestens 2 Spieler.',angry:'🔥 Der Drache wird wütend!',rage:'💢 WUTANFALL!',dragonWon:'💀 Der Drache hat gewonnen',bossWin:'🏆 Boss besiegt in ',bossLose:'💀 Niederlage',gear:'Ausrüstung wählen',
  lgXb:'<b>Xbox:</b> Steuerkreuz links/rechts Figur · hoch/runter Hut · ',lgPs:'<b>PlayStation:</b> Steuerkreuz links/rechts Figur · hoch/runter Hut · ',lgPad:'{B} / {X} Farbe · {A} bereit · nach „Bereit“ {B} abbrechen',lgMain:'◀ ▶ Figur · ▲ ▼ Hut · {B} Farbe · {A} bereit · nach „Bereit“ {B} abbrechen',
  lgEmo:'Emoji: 😀 / L2 / R2 halten (nach „Bereit“ auch L1 / R1) · Name: Handy oben antippen / Start / N',lgLeave:'Verlassen: Controller %Y · ✕ am Slot · am Handy Namen antippen → „Spiel verlassen“',lgTeam:'Team: <b>L1 / R1</b> (vor „Bereit“) · Taste <b>G</b> · ⚑ am Handy · ◀ ▶ am Slot',lgTouch:'Touch: Pfeile links · A bereit · B Farbe / Abbrechen · 😀 halten + Pfeil = Emoji',
- hct:{0:['🌊 The Flood','◀ ▶ laufen · ▲ oder {A} springen. Gemeinsam überleben, das Wasser steigt!'],1:['💥 Bomben-Chaos','◀ ▶ ▲ ▼ laufen · {A} = Bombe legen. Der letzte Überlebende gewinnt.'],2:['🤼 Sumo-Arena','◀ ▶ ▲ ▼ laufen · {A} = Dash · {B} = Block (kurz vor dem Treffer = Parade!). Wer von der schrumpfenden Plattform fliegt, ist raus.'],3:['🏁 Hindernisrennen','◀ ▶ laufen · {A} oder ▲ springen · {B} schubsen. Wer zuerst im Ziel ist, gewinnt. Wer rausfliegt, hilft dem Letzten mit {A} (Rückenwind).'],4:['🐲 Boss-Rush','Alle zusammen gegen den Drachen! Wähle deine Ausrüstung. {B} = Angriff, {B} halten = Spezial.'],5:['🖌️ Farbkrieg','◀ ▶ ▲ ▼ lenken · {A} = Sprint. Fahr aus deinem Gebiet und wieder zurück: alles Eingekreiste gehört dir! Fährt jemand über deine Spur, bist du kurz raus.']},
+ hct:{0:['🌊 The Flood','◀ ▶ laufen · ▲ oder {A} springen. Gemeinsam überleben, das Wasser steigt!'],1:['💥 Bomben-Chaos','◀ ▶ ▲ ▼ laufen · {A} = Bombe legen. Der letzte Überlebende gewinnt.'],2:['🤼 Sumo-Arena','◀ ▶ ▲ ▼ laufen · {A} = Dash · {B} = Block (kurz vor dem Treffer = Parade!). Wer von der schrumpfenden Plattform fliegt, ist raus.'],3:['🏁 Hindernisrennen','◀ ▶ laufen · {A} oder ▲ springen · {B} schubsen. Wer zuerst im Ziel ist, gewinnt. Wer rausfliegt, hilft dem Letzten mit {A} (Rückenwind).'],4:['🐲 Boss-Rush','Alle zusammen gegen den Drachen! Wähle deine Ausrüstung. {B} = Angriff, {B} halten = Spezial.'],5:['🖌️ Farbkrieg','◀ ▶ ▲ ▼ lenken · {A} = Sprint. Fahr aus deinem Gebiet und wieder zurück: alles Eingekreiste gehört dir! Fährt jemand über deine Spur, bist du kurz raus. Items: 🎨 färbt um dich herum · 🛡️ Spur unverwundbar · ⚡ schneller · ❄️ friert Gegner ein.']},
  thint:{0:'Gemeinsam überleben, das Wasser steigt!',1:'{A} = Bombe. Der letzte Überlebende gewinnt.',2:'{A} = Dash · {B} = Block. Wer runterfliegt, ist raus.',4:'Gemeinsam gegen den Drachen: Schwert, Bogen oder Schild!',3:'{A} / ▲ springen · {B} schubsen. Wer zuerst im Ziel ist, gewinnt.', 5:'Gebiet einkreisen · {A} = Sprint. Fremde Spur kreuzen = Gegner raus!',d:'Tippe {A} so schnell du kannst!'}});
 TN.push(...TX_UI.teamN);
 /* Listen, Optionen, kurze Spieltexte (24.11.2026) */
 Object.assign(TX_UI,{chn:['Roboter','Katze','Eule','Hase','Küken','Fuchs','Alien','Geist','Bär','Pinguin','Drache','Einhorn','Kaktus','Krake','Frosch','Mumie'],hatn:['Zylinder','Krone','Propeller','Pirat','Mütze','Cowboy','Zauberer','Party','Kochmütze','Wikinger','Heiligenschein','Teufel','Sombrero','Eistüte','Kopfhörer','Quietscheente'],themes:['Standard','Retro','Neon','Weihnachten','Silvester'],dn:['Leicht','Normal','Schwer'],rzn:[[1000,'🕳️ Lücken-Hüpfer'],[1950,'🌀 Drehbalken'],[3100,'🎈 Wackel-Plattformen'],[3860,'⬅️ Laufband'],[4560,'🔨 Hammer-Halle'],[5700,'🪜 Himmelstreppe'],[6660,'⚠️ Wackel-Brücke'],[7340,'🏆 Endspurt']],
- opts:{0:[{k:'diff',n:'Schwierigkeit',v:['Leicht','Normal','Schwer']},{k:'rain',n:'Regen',v:['Aus','An']}],1:[{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],2:[{k:'sp',n:'Schrumpf-Tempo',v:['Gemütlich','Normal','Hektisch']},{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],3:[{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],4:[{k:'diff',n:'Boss-Stärke',v:['Leicht','Normal','Schwer']},{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}], 5:[{k:'tl',n:'Rundenzeit',v:['60 s','90 s','120 s']},{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],11:[{k:'n',n:'Runden',v:['3 Runden','5 Runden','7 Runden']},{k:'pool',n:'Spiele',v:['Die 4 Hauptspiele','Alle Spiele']}]},
+ opts:{0:[{k:'diff',n:'Schwierigkeit',v:['Leicht','Normal','Schwer']},{k:'rain',n:'Regen',v:['Aus','An']}],1:[{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],2:[{k:'sp',n:'Schrumpf-Tempo',v:['Gemütlich','Normal','Hektisch']},{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],3:[{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],4:[{k:'diff',n:'Boss-Stärke',v:['Leicht','Normal','Schwer']},{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}], 5:[{k:'tl',n:'Rundenzeit',v:['60 s','90 s','120 s']},{k:'it',n:'Items',v:['Aus','An']},{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],11:[{k:'n',n:'Runden',v:['3 Runden','5 Runden','7 Runden']},{k:'pool',n:'Spiele',v:['Die 4 Hauptspiele','Alle Spiele']}]},
  eqN:['Schwert','Bogen','Schild'],eqD:['Nahkampf','aus der Ferne','stoßen & betäuben'],uPts:'Punkte',uSec:'Sek.',uTaps:'Taps',rnd1:'Runde',rndN:'Runden',nmPl:'Spieler',tmCol:'Teamfarbe',noTeam:'Kein Team',go:'Los!',nmBot:'Bot ',tmScore:'Team-Punktzahl: ',connecting:'Verbinde…',interim:'Zwischenstand',pt1:'Punkt',draw:'Unentschieden',drawX:'🤝 Unentschieden!',drawH:'🤝 Unentschieden',wins:' gewinnt',
  plop:'Plumps!',finish:'ZIEL',goBig:'LOS!',parry:'PARADE!',blocked:'Geblockt!',clash:'Zusammenprall!',voteA:'✔ nochmal',voteB:'✔ Menü',ready:'✔ bereit',tourWinT:'🏆 Turniersieger: ',tourWinner:'🏆 Turniersieger',winnerBig:'🏆 SIEGER!',winner:'🏆 Sieger',bossDown:'🏆 BOSS BESIEGT!',sudden:'🔥 SUDDEN DEATH!',
- fkCd:'Kreis fahren = Fläche gehört dir · Fremde Spur kreuzen = Gegner raus',fk10:'⏱ Noch 10 Sekunden!',fkSelf:'Eigene Spur!',fkNoLand:'Kein Gebiet mehr!'});
+ fkCd:'Kreis fahren = Fläche gehört dir · Fremde Spur kreuzen = Gegner raus',fk10:'⏱ Noch 10 Sekunden!',fkSelf:'Eigene Spur!',fkNoLand:'Kein Gebiet mehr!',fkIt:['Farbbombe!','Schild!','Turbo!','Frost!']});
 Object.assign(TX_UI,{mqJoin:'Handys: mitspielen',qrScan:'Handys: QR-Code scannen.',teamsL:'🎲 Teams',bkAll:'Alle müssen danach wieder „Bereit“ drücken.',noPts:'Noch keine Punkte. Spielt eine Runde!',noRecs:'Noch keine Rekorde. Spielt eine Runde!',hatEdit:'▲▼ ändern · ▶ weiter · ◀ zurück',free:'frei',
  aRem:'Spieler entfernen',aName:'Name',aHatN:'Hut weiter',aHatP:'Hut zurück',aChN:'Figur weiter',aChP:'Figur zurück',aCoN:'Farbe weiter',aCoP:'Farbe zurück',aTmN:'Team weiter',aTmP:'Team zurück'});
 const GAMES=TX_UI.games;
@@ -263,7 +263,7 @@ GAMES[2].opts=TX_UI.opts[2];
 GAMES[3].opts=TX_UI.opts[3];
 GAMES[4].opts=TX_UI.opts[4];
 GAMES[5].opts=TX_UI.opts[5];
-let cfgG={mus:100,sfx:100,th:0},gset={0:{diff:1,rain:1},1:{bots:1},2:{sp:1,bots:1},3:{bots:1},4:{diff:1,bots:1},5:{tl:1,bots:1}};
+let cfgG={mus:100,sfx:100,th:0},gset={0:{diff:1,rain:1},1:{bots:1},2:{sp:1,bots:1},3:{bots:1},4:{diff:1,bots:1},5:{tl:1,it:1,bots:1}};
 const gvol=i=>1;
 try{const s=JSON.parse(localStorage.getItem('pa_cfg')||'null');if(s){Object.assign(cfgG,s.g);for(const k in s.s)Object.assign(gset[k]=gset[k]||{},s.s[k])}}catch(e){}
 const saveC=()=>{try{localStorage.setItem('pa_cfg',JSON.stringify({g:cfgG,s:gset}))}catch(e){}};
@@ -1412,9 +1412,22 @@ function capture(q){const B=FK,C=B.C,R=B.R,own=B.own,sn=B.seen,qu=B.qu,o=q.o;let
  B.dirty=1;recount();const g=B.cnt[o]-n0;
  if(g>0){if(g/B.N>=.01)pop(px(q.x),py(q.y)-34,'+'+Math.round(g/B.N*100)+' %',B.oc[o]);fx(px(q.x),py(q.y),Math.min(24,6+g/8|0),B.oc[o],220,.5);
   [523,659,784].forEach((f,k)=>setTimeout(()=>beep(cfgG.sfx,0,f*(1+Math.min(1,g/300))),k*60))}
- for(const r of B.pl)if(r.al&&r!==q&&!B.cnt[r.o]){kill(r,q);pop(px(r.x),py(r.y)-60,TX_UI.fkNoLand,'#ffffff')}}
+ noLand(q)}
+function noLand(q){const B=FK;for(const r of B.pl)if(r.al&&r!==q&&!B.cnt[r.o]){kill(r,q);pop(px(r.x),py(r.y)-60,TX_UI.fkNoLand,'#ffffff')}}
 
-function kill(q,by){const B=FK;if(!q.al)return;q.al=0;q.rt=RESP;q.sp=0;clearTrail(q);
+/* --- Items: 0 Farbbombe, 1 Schild, 2 Turbo, 3 Frost --- */
+const IE=['🎨','🛡️','⚡','❄️'],IC=['#ff4fd8','#7ff2ff','#ffe13c','#9fd8ff'],ITMAX=3,ITLIFE=15;
+function itSpawn(){const B=FK,C=B.C,R=B.R;for(let k=0;k<40;k++){const x=2+rnd()*(C-4)|0,y=2+rnd()*(R-4)|0,c=y*C+x;
+  if(B.own[c]||B.pl.some(r=>r.tg[c]||(r.al&&hyp(r.x-x-.5,r.y-y-.5)<4))||B.it.some(i=>hyp(i.x-x-.5,i.y-y-.5)<6))continue;
+  B.it.push({k:rnd()*4|0,x:x+.5,y:y+.5,t:0});beep(cfgG.sfx,0,880);return}}
+function itTake(q,it){const B=FK,X=px(q.x),Y=py(q.y),o=q.o;fx(px(it.x),py(it.y),14,IC[it.k],220,.5);pop(X,Y-56,IE[it.k]+' '+TX_UI.fkIt[it.k],IC[it.k]);
+ if(it.k===0){const r=4,C=B.C;for(let y=Math.max(0,(q.y|0)-r);y<=Math.min(B.R-1,(q.y|0)+r);y++)for(let x=Math.max(0,(q.x|0)-r);x<=Math.min(C-1,(q.x|0)+r);x++)if(hyp(x+.5-q.x,y+.5-q.y)<=r+.3)B.own[y*C+x]=o;
+  B.dirty=1;if(q.tr.length)capture(q);else{recount();noLand(q)}B.sh=Math.max(B.sh,.3);[392,523,659,784].forEach((f,k)=>setTimeout(()=>beep(cfgG.sfx,0,f),k*50))}
+ else if(it.k===1){q.shd=5;beep(cfgG.sfx,1,520)}
+ else if(it.k===2){q.tb=4;q.scd=0;beep(cfgG.sfx,1,880)}
+ else{for(const r of B.pl)if(r.al&&r.o!==o&&hyp(r.x-q.x,r.y-q.y)<10){r.fz=1.5;fx(px(r.x),py(r.y),10,'#bfe9ff',160,.5);padBuzz(r.p)}beep(cfgG.sfx,0,1320);setTimeout(()=>beep(cfgG.sfx,0,990),90)}}
+
+function kill(q,by){const B=FK;if(!q.al)return;q.al=0;q.rt=RESP;q.sp=0;q.shd=q.tb=q.fz=0;clearTrail(q);
  fx(px(q.x),py(q.y),18,B.oc[q.o],280,.7);B.sh=Math.max(B.sh,.45);stb(q.p,'d');padBuzz(q.p);beep(cfgG.sfx,0,440);setTimeout(()=>beep(cfgG.sfx,0,220),120);
  if(by&&by!==q){stb(by.p,'k');pop(px(q.x),py(q.y)-40,'✂ '+by.p.name.slice(0,8),'#ffffff')}else pop(px(q.x),py(q.y)-40,TX_UI.fkSelf,'#ffffff');
  /* Jeder gegen jeden: das Gebiet verfaellt. Teams: das Team behaelt es */
@@ -1427,12 +1440,12 @@ function respawn(q){const B=FK,C=B.C,R=B.R;let x=-1,y=-1;
    for(let yy=cy-3;yy<=cy+3;yy++)for(let xx=cx-3;xx<=cx+3;xx++){const c=yy*C+xx;if(!B.own[c]&&!B.pl.some(r=>r.tg[c]))s++}
    if(s>bs){bs=s;x=cx;y=cy}if(s===49)break}
   square(q.o,x,y,2);recount()}
- q.x=x+.5;q.y=y+.5;q.c=y*C+x;q.a=q.ta=Math.atan2(R/2-q.y,C/2-q.x);q.ai.at=0;q.ai.wp=[];q.ai.home=0;q.ai.ta=q.a;q.al=1;q.sp=0;q.scd=0;q.inv=1;
+ q.x=x+.5;q.y=y+.5;q.c=y*C+x;q.a=q.ta=Math.atan2(R/2-q.y,C/2-q.x);q.ai.at=0;q.ai.wp=[];q.ai.home=0;q.ai.ta=q.a;q.al=1;q.sp=0;q.scd=0;q.inv=1;q.shd=q.tb=q.fz=0;
  fx(px(q.x),py(q.y),12,'#ffffff',180,.4);beep(cfgG.sfx,0,660)}
 
 /* Kopf betritt Zelle c. false = Spieler ist dabei rausgeflogen */
 function enter(q,c){const B=FK;q.c=c;
- for(const r of B.pl)if(r!==q&&r.al&&r.o!==q.o&&r.tg[c]&&!(r.inv>0))kill(r,q);
+ for(const r of B.pl)if(r!==q&&r.al&&r.o!==q.o&&r.tg[c]&&!(r.inv>0)&&!(r.shd>0))kill(r,q);
  if(B.own[c]===q.o){if(q.tr.length)capture(q);return true}
  if(q.tg[c]){if(q.tg[c]<q.ti-2){kill(q,null);return false}return true}
  q.tg[c]=++q.ti;q.tr.push(c);return true}
@@ -1450,7 +1463,8 @@ function ai(q,dt){const B=FK,A=q.ai;A.at-=dt;
   let dm=1e9;if(tl)for(const r of B.pl)if(r.al&&r.o!==q.o){for(let i=0;i<tl;i+=2){const c=q.tr[i],dx=cx_(c)-r.x,dy=cy_(c)-r.y,d=dx*dx+dy*dy;if(d<dm)dm=d}const dx=q.x-r.x,dy=q.y-r.y;dm=Math.min(dm,dx*dx+dy*dy)}
   const safe=(2.5+4*q.sk)**2;
   /* Angriff: fremde Spur in der Naehe */
-  let tg=null;if(tl<12&&rnd()<.6*q.sk){let bd=(5+4*q.sk)**2;for(const r of B.pl)if(r.al&&r.o!==q.o&&r.tr.length>2&&!(r.inv>0))for(let i=0;i<r.tr.length;i+=2){const c=r.tr[i],d=(cx_(c)-q.x)**2+(cy_(c)-q.y)**2;if(d<bd){bd=d;tg=[cx_(c),cy_(c)]}}}
+  let tg=null;if(tl<10&&dm>=safe&&rnd()<.8*q.sk){let bd=(4+5*q.sk)**2;for(const it of B.it){const d=(it.x-q.x)**2+(it.y-q.y)**2;if(d<bd){bd=d;tg=[it.x,it.y]}}}
+  if(!tg&&tl<12&&rnd()<.6*q.sk){let bd=(5+4*q.sk)**2;for(const r of B.pl)if(r.al&&r.o!==q.o&&r.tr.length>2&&!(r.inv>0)&&!(r.shd>0))for(let i=0;i<r.tr.length;i+=2){const c=r.tr[i],d=(cx_(c)-q.x)**2+(cy_(c)-q.y)**2;if(d<bd){bd=d;tg=[cx_(c),cy_(c)]}}}
   if(tg)A.wp=[];else if(tl&&(dm<safe||tl>14+22*q.sk)){A.wp=[];A.home=1}
   if(inOwn&&!tl){A.home=0;if(!A.wp.length&&!tg){const a=rnd()*PI2,L=4+rnd()*(4+7*q.sk),Wd=(3+rnd()*(3+4*q.sk))*(rnd()<.5?-1:1),dx=Math.cos(a),dy=Math.sin(a);
     const p1=[cl(q.x+dx*L,B.C),cl(q.y+dy*L,B.R)];A.wp=[p1,[cl(p1[0]-dy*Wd,B.C),cl(p1[1]+dx*Wd,B.R)]]}}
@@ -1473,13 +1487,17 @@ function upd(dt){const B=FK,S=B.pl;B.sh=Math.max(0,B.sh-dt*1.8);
  for(const q of S)if(q.em&&(q.em.t-=dt)<=0)q.em=null;
  if(B.cd>0){B.cd-=dt;cdTick(Math.max(0,Math.ceil(B.cd)));return}
  if(B.end==null){B.t+=dt;if(!B.w10&&B.tl-B.t<=10){B.w10=1;banner(TX_UI.fk10);beep(cfgG.sfx,1,330);setTimeout(()=>beep(cfgG.sfx,1,330),180)}}
+ if(B.itOn&&B.end==null){for(const it of B.it)it.t+=dt;B.it=B.it.filter(it=>it.t<ITLIFE);if((B.its-=dt)<=0){B.its=6.5+rnd()*3;if(B.it.length<ITMAX)itSpawn()}}
  for(const q of S){if(q.gone)continue;
   if(!q.al){if(B.end==null&&(q.rt-=dt)<=0)respawn(q);continue}
-  q.sp=Math.max(0,q.sp-dt);q.scd=Math.max(0,q.scd-dt);if(q.inv>0)q.inv-=dt;
+  q.sp=Math.max(0,q.sp-dt);q.scd=Math.max(0,q.scd-dt);if(q.inv>0)q.inv-=dt;if(q.shd>0)q.shd-=dt;if(q.tb>0){q.tb-=dt;q.scd=0}
   if(B.end!=null)continue;
+  if(q.fz>0){q.fz-=dt;continue}
   if(q.bot)ai(q,dt);else{const b=(P[q.p.id]||{b:0}).b,dx=b&1?-1:b&2?1:0,dy=b&32?-1:b&64?1:0;if(dx||dy)q.ta=Math.atan2(dy,dx)}
   let d=((q.ta-q.a+Math.PI)%PI2+PI2)%PI2-Math.PI;const tm=TURN*dt;q.a+=Math.max(-tm,Math.min(tm,d));
-  let dist=SPD*(q.sp>0?SPR:1)*dt;const n=Math.ceil(dist/.4),ds=dist/n;
+  for(let i=B.it.length-1;i>=0;i--){const it=B.it[i];if(hyp(it.x-q.x,it.y-q.y)<1.4){B.it.splice(i,1);itTake(q,it);if(!q.al)break}}
+  if(!q.al)continue;
+  let dist=SPD*(q.sp>0?SPR:1)*(q.tb>0?1.35:1)*dt;const n=Math.ceil(dist/.4),ds=dist/n;
   for(let k=0;k<n&&q.al;k++){const ox=q.x|0,oy=q.y|0;q.x+=Math.cos(q.a)*ds;q.y+=Math.sin(q.a)*ds;
    /* Rand: entlanggleiten statt stehenbleiben */
    if(q.x<.02||q.x>B.C-.02){q.x=Math.max(.02,Math.min(B.C-.02,q.x));const s=Math.sin(q.a)||(q.y<B.R/2?1:-1);q.a=s>0?Math.PI/2:-Math.PI/2;if(!q.bot)q.ta=q.a}
@@ -1544,15 +1562,23 @@ function draw(){const B=FK,cv=$('fkc'),sc=Math.min(apPW()/W,innerHeight/H);
  /* Spuren */
  c.lineJoin=c.lineCap='round';
  for(const q of B.pl){if(!q.al||!q.tr.length)continue;c.beginPath();c.moveTo(px(cx_(q.tr[0])),py(cy_(q.tr[0])));for(let i=1;i<q.tr.length;i++)c.lineTo(px(cx_(q.tr[i])),py(cy_(q.tr[i])));c.lineTo(px(q.x),py(q.y));
-  c.strokeStyle='#0b0820';c.lineWidth=cs*.78;c.stroke();c.strokeStyle=B.oc[q.o];c.globalAlpha=.82+.18*Math.sin(now*10);c.lineWidth=cs*.5;c.stroke();c.globalAlpha=1;c.strokeStyle='#ffffff88';c.lineWidth=Math.max(1.5,cs*.12);c.stroke()}
+  c.strokeStyle='#0b0820';c.lineWidth=cs*.78;c.stroke();c.strokeStyle=B.oc[q.o];c.globalAlpha=.82+.18*Math.sin(now*10);c.lineWidth=cs*.5;c.stroke();c.globalAlpha=1;c.strokeStyle=q.shd>0?'#ffffff':'#ffffff88';c.lineWidth=q.shd>0?cs*.26:Math.max(1.5,cs*.12);c.stroke()}
+ /* Items: blinken in den letzten 3 s */
+ c.textAlign='center';
+ for(const it of B.it){if(ITLIFE-it.t<3&&Math.floor(now*8)%2)continue;const X=px(it.x),Y=py(it.y)+Math.sin(now*4+it.x)*cs*.15,s=Math.min(1,it.t*4),r=cs*1.05*s;
+  c.fillStyle='#0b0820dd';dis(X,Y,r);c.fill();c.strokeStyle=IC[it.k];c.lineWidth=3;c.globalAlpha=.6+.4*Math.sin(now*6);dis(X,Y,r);c.stroke();c.globalAlpha=1;
+  c.font=`${cs*1.25*s}px sans-serif`;c.fillText(IE[it.k],X,Y+cs*.08)}
  /* Figuren */
  const kk=cs*4/158,live=B.pl.filter(q=>q.al).sort((a,b)=>a.y-b.y);
  for(const q of live){const X=px(q.x),Y=py(q.y);
-  if(q.sp>0){c.strokeStyle='#ffffffaa';c.lineWidth=2.5;c.beginPath();const ca=Math.cos(q.a),sa=Math.sin(q.a);for(let i=-1;i<=1;i++){c.moveTo(X-ca*cs*.9+i*cs*.35*sa,Y-sa*cs*.9-i*cs*.35*ca);c.lineTo(X-ca*cs*2.2+i*cs*.35*sa,Y-sa*cs*2.2-i*cs*.35*ca)}c.stroke()}
+  if(q.shd>0&&(q.shd>1.2||Math.floor(now*10)%2)){c.strokeStyle='#7ff2ff';c.lineWidth=3;c.globalAlpha=.7+.3*Math.sin(now*8);dis(X,Y-cs*1.2,cs*2.3);c.stroke();c.globalAlpha=1}
+  if(q.sp>0||q.tb>0){c.strokeStyle='#ffffffaa';c.lineWidth=2.5;c.beginPath();const ca=Math.cos(q.a),sa=Math.sin(q.a);for(let i=-1;i<=1;i++){c.moveTo(X-ca*cs*.9+i*cs*.35*sa,Y-sa*cs*.9-i*cs*.35*ca);c.lineTo(X-ca*cs*2.2+i*cs*.35*sa,Y-sa*cs*2.2-i*cs*.35*ca)}c.stroke()}
   c.fillStyle='#fff';dis(X,Y,cs*.72);c.fill();c.fillStyle=B.oc[q.o];dis(X,Y,cs*.56);c.fill();
   const ax=X+Math.cos(q.a)*cs*1.25,ay=Y+Math.sin(q.a)*cs*1.25,pa=q.a+Math.PI/2;c.fillStyle='#fff';c.beginPath();c.moveTo(ax+Math.cos(q.a)*cs*.45,ay+Math.sin(q.a)*cs*.45);c.lineTo(ax+Math.cos(pa)*cs*.32,ay+Math.sin(pa)*cs*.32);c.lineTo(ax-Math.cos(pa)*cs*.32,ay-Math.sin(pa)*cs*.32);c.fill();
   if(q.inv>0&&Math.floor(now*14)%2)c.globalAlpha=.5;
   c.drawImage(q.spr,14,2,116,158,X-58*kk,Y-152*kk+cs*.35,116*kk,158*kk);c.globalAlpha=1;
+  if(q.fz>0){c.fillStyle='rgba(170,225,255,.45)';c.strokeStyle='#dff4ff';c.lineWidth=2;c.beginPath();c.rect(X-cs*1.3,Y-cs*3.6,cs*2.6,cs*4.2);c.fill();c.stroke()}
+  {const ic=q.fz>0?'❄️':q.shd>0?'🛡️':q.tb>0?'⚡':'';if(ic){c.font=`${cs*1.1}px sans-serif`;c.textAlign='center';c.fillText(ic,X+cs*1.5,Y-cs*3.2)}}
   const rd=1-q.scd/SCD;c.fillStyle='#0008';c.fillRect(X-cs,Y+cs*.85,cs*2,4);c.fillStyle=rd>=1?'#18c9e8':'#18c9e888';c.fillRect(X-cs,Y+cs*.85,cs*2*Math.min(1,rd),4)}
  for(const q of live)if(q.em){const el=2.2-q.em.t,pp=Math.min(1,el*7),s=.6+.4*pp,X=Math.max(50,Math.min(W-50,px(q.x)));let Y=py(q.y)-cs*3.6-Math.min(el,.6)*14;if(Y<TOP+40)Y=py(q.y)+cs*3;
   c.globalAlpha=Math.min(1,q.em.t*3);c.fillStyle='#0b0820ea';c.strokeStyle=B.oc[q.o];c.lineWidth=4;dis(X,Y,30*s);c.fill();c.stroke();c.fillStyle='#fff';c.font=`${44*s}px sans-serif`;c.textAlign='center';c.fillText(q.em.e,X,Y+2);c.globalAlpha=1}
@@ -1586,13 +1612,13 @@ window.startFk=function(){let l=list();if(!l.length)return;if(l.length<2){addBot
  const keys=[],ow={};l=l.slice().sort((a,b)=>tkey(a).localeCompare(tkey(b)));l.forEach(p=>{const k=tkey(p);if(!ow[k]){keys.push(k);ow[k]=keys.length}});
  const n=l.length,C=48+4*n,cs=AW/C,R=Math.floor(AH/cs),N=C*R;
  FK={C,R,N,cs,ox:(W-C*cs)/2,oy:TOP+(AH-R*cs)/2+6,own:new Uint8Array(N),seen:new Uint8Array(N),qu:new Int32Array(N),cnt:new Int32Array(keys.length+1),os:keys.map((k,i)=>i+1),oc:[],og:[],
-  pl:[],pa:[],tx:[],bn:null,sh:0,slo:0,t:0,tl,w10:0,cd:3,end:null,done:0,pz:0,pzi:0,dirty:1,last:performance.now()};
+  pl:[],pa:[],tx:[],bn:null,sh:0,slo:0,t:0,tl,w10:0,cd:3,end:null,done:0,pz:0,pzi:0,dirty:1,last:performance.now(),it:[],its:4,itOn:(o.it!=null?o.it:1)===1};
  const B=FK;B.img=document.createElement('canvas');B.img.width=C;B.img.height=R;B.ix=B.img.getContext('2d');B.id=B.ix.createImageData(C,R);
  B.pl=l.map((p,i)=>{const oo=ow[tkey(p)],a=Math.PI+i*PI2/n,x=n<2?C/2|0:Math.round(C/2+Math.cos(a)*C*.34),y=n<2?R/2|0:Math.round(R/2+Math.sin(a)*R*.3);
   B.oc[oo]=pcol(p);B.og[oo]=rgb(pcol(p));square(oo,x,y,2);
   const spr=document.createElement('canvas');spr.width=144;spr.height=184;drawPv(spr,TMON&&p.tm?Object.assign({},p,{trgb:TRGB[p.tm-1]}):p);
   const hd=Math.atan2(R/2-y-.5,C/2-x-.5);
-  return{p,o:oo,bot:p.id.startsWith('bot'),x:x+.5,y:y+.5,c:y*C+x,a:hd,ta:hd,al:1,rt:0,gone:0,inv:0,tg:new Int32Array(N),tr:[],ti:0,sp:0,scd:0,em:null,spr,
+  return{p,o:oo,bot:p.id.startsWith('bot'),x:x+.5,y:y+.5,c:y*C+x,a:hd,ta:hd,al:1,rt:0,gone:0,inv:0,tg:new Int32Array(N),tr:[],ti:0,sp:0,scd:0,shd:0,tb:0,fz:0,em:null,spr,
    sk:bs*(.8+rnd()*.3),ai:{at:rnd()*.2,wp:[],home:0,ta:hd}}});
  recount();show('fk');requestAnimationFrame(loop)};
 })();
