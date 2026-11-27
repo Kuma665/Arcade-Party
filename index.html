@@ -212,7 +212,7 @@ body.apmenu #tp{display:none}
 <iframe id="fl" allow="autoplay *; gamepad *"></iframe>
 <script>
 /* Texte zentral (für späteres Englisch): TX (Grundausstattung, Hinweise) + TX_UI (Menüs, Spielnamen) */
-var VER='v2026-11-26c';
+var VER='v2026-11-27';
 var TX={gfxL:'Grafik',gfx:['Auto','Niedrig','Mittel','Hoch'],hOk:'{A} OK · {B} Zurück',hPz:'{A} Wählen · {B} Weiterspielen',hcOk:'Alle drücken {A}, wenn sie die Steuerung kennen',bkYes:'Ja, zurück · {A}',bkNo:'Nein · {B}',rmA:'↻ Nochmal · {A}',rmB:'Menü · {B}',tfin:'Zurück zum Menü in ein paar Sekunden · {A}',resT:'Es geht gleich weiter…',resV:'Abstimmung: {A} = nochmal · {B} = Menü · es zählt die Mehrheit',rsq:'Wirklich neu starten? · {A}',trs:' · ◀ ▶ wählen · {A} bestätigen',boSel:'◀ ▶ wählen · {A} bestätigen · {B} ändern',boHold:'🛡 {A} halten!',
  mute:'Ton an/aus (M)',fs:'Vollbild an/aus',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'Ein Spiel von Arox Games · Entwickelt von Aram Simon<br><b>Arcade Party</b> '+VER+' · Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts) · QR-Code: qrcodejs (davidshimjs) · Handy-Verbindung: PeerJS (peerjs.com)'};
@@ -1425,7 +1425,11 @@ function itTake(q,it){const B=FK,X=px(q.x),Y=py(q.y),o=q.o;fx(px(it.x),py(it.y),
   B.dirty=1;if(q.tr.length)capture(q);else{recount();noLand(q)}B.sh=Math.max(B.sh,.3);[392,523,659,784].forEach((f,k)=>setTimeout(()=>beep(cfgG.sfx,0,f),k*50))}
  else if(it.k===1){q.shd=5;beep(cfgG.sfx,1,520)}
  else if(it.k===2){q.tb=4;q.scd=0;beep(cfgG.sfx,1,880)}
- else{for(const r of B.pl)if(r.al&&r.o!==o&&hyp(r.x-q.x,r.y-q.y)<10){r.fz=1.5;fx(px(r.x),py(r.y),10,'#bfe9ff',160,.5);padBuzz(r.p)}beep(cfgG.sfx,0,1320);setTimeout(()=>beep(cfgG.sfx,0,990),90)}}
+ else{/* Frost: alle Gegner im Umkreis, sonst der naechste Gegner per Eisstrahl */
+  const fr=r=>{r.fz=1.5;fx(px(r.x),py(r.y),10,'#bfe9ff',160,.5);padBuzz(r.p);if(B.zp.length<8)B.zp.push({x1:q.x,y1:q.y,r,t:.45})};
+  const en=B.pl.filter(r=>r.al&&r.o!==o),nb=en.filter(r=>hyp(r.x-q.x,r.y-q.y)<10);
+  if(nb.length)nb.forEach(fr);else if(en.length)fr(en.reduce((a,r)=>hyp(r.x-q.x,r.y-q.y)<hyp(a.x-q.x,a.y-q.y)?r:a));
+  beep(cfgG.sfx,0,1320);setTimeout(()=>beep(cfgG.sfx,0,990),90)}}
 
 function kill(q,by){const B=FK;if(!q.al)return;q.al=0;q.rt=RESP;q.sp=0;q.shd=q.tb=q.fz=0;clearTrail(q);
  fx(px(q.x),py(q.y),18,B.oc[q.o],280,.7);B.sh=Math.max(B.sh,.45);stb(q.p,'d');padBuzz(q.p);beep(cfgG.sfx,0,440);setTimeout(()=>beep(cfgG.sfx,0,220),120);
@@ -1485,6 +1489,7 @@ function upd(dt){const B=FK,S=B.pl;B.sh=Math.max(0,B.sh-dt*1.8);
  for(const p of B.pa){p.x+=p.vx*dt;p.y+=p.vy*dt;const f=Math.pow(.02,dt);p.vx*=f;p.vy*=f;p.t-=dt}B.pa=B.pa.filter(p=>p.t>0);
  for(const t of B.tx){t.y-=dt*50;t.t-=dt}B.tx=B.tx.filter(t=>t.t>0);
  if(B.bn&&(B.bn.t-=dt)<=0)B.bn=null;
+ for(const z of B.zp)z.t-=dt;B.zp=B.zp.filter(z=>z.t>0);
  for(const q of S)if(q.em&&(q.em.t-=dt)<=0)q.em=null;
  if(B.cd>0){B.cd-=dt;cdTick(Math.max(0,Math.ceil(B.cd)));return}
  if(B.end==null){B.t+=dt;if(!B.w10&&B.tl-B.t<=10){B.w10=1;banner(TX_UI.fk10);beep(cfgG.sfx,1,330);setTimeout(()=>beep(cfgG.sfx,1,330),180)}}
@@ -1564,6 +1569,8 @@ function draw(){const B=FK,cv=$('fkc'),sc=Math.min(apPW()/W,innerHeight/H);
  c.lineJoin=c.lineCap='round';
  for(const q of B.pl){if(!q.al||!q.tr.length)continue;c.beginPath();c.moveTo(px(cx_(q.tr[0])),py(cy_(q.tr[0])));for(let i=1;i<q.tr.length;i++)c.lineTo(px(cx_(q.tr[i])),py(cy_(q.tr[i])));c.lineTo(px(q.x),py(q.y));
   c.strokeStyle='#0b0820';c.lineWidth=cs*.78;c.stroke();c.strokeStyle=B.oc[q.o];c.globalAlpha=.82+.18*Math.sin(now*10);c.lineWidth=cs*.5;c.stroke();c.globalAlpha=1;c.strokeStyle=q.shd>0?'#ffffff':'#ffffff88';c.lineWidth=q.shd>0?cs*.26:Math.max(1.5,cs*.12);c.stroke()}
+ /* Eisstrahl (Frost) */
+ for(const z of B.zp){const a=z.t/.45,x1=px(z.x1),y1=py(z.y1),x2=px(z.r.x),y2=py(z.r.y);c.globalAlpha=a;c.strokeStyle='#bfe9ff';c.lineWidth=cs*.55;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();c.strokeStyle='#ffffff';c.lineWidth=cs*.18;c.stroke();c.globalAlpha=1}
  /* Items: blinken in den letzten 3 s */
  c.textAlign='center';
  for(const it of B.it){if(ITLIFE-it.t<3&&Math.floor(now*8)%2)continue;const X=px(it.x),Y=py(it.y)+Math.sin(now*4+it.x)*cs*.15,s=Math.min(1,it.t*4),r=cs*1.05*s;
@@ -1613,7 +1620,7 @@ window.startFk=function(){let l=list();if(!l.length)return;if(l.length<2){addBot
  const keys=[],ow={};l=l.slice().sort((a,b)=>tkey(a).localeCompare(tkey(b)));l.forEach(p=>{const k=tkey(p);if(!ow[k]){keys.push(k);ow[k]=keys.length}});
  const n=l.length,C=48+4*n,cs=AW/C,R=Math.floor(AH/cs),N=C*R;
  FK={C,R,N,cs,ox:(W-C*cs)/2,oy:TOP+(AH-R*cs)/2+6,own:new Uint8Array(N),seen:new Uint8Array(N),qu:new Int32Array(N),cnt:new Int32Array(keys.length+1),os:keys.map((k,i)=>i+1),oc:[],og:[],
-  pl:[],pa:[],tx:[],bn:null,sh:0,slo:0,t:0,tl,w10:0,cd:3,end:null,done:0,pz:0,pzi:0,dirty:1,last:performance.now(),it:[],its:4,itOn:(o.it!=null?o.it:1)===1};
+  pl:[],pa:[],tx:[],bn:null,sh:0,slo:0,t:0,tl,w10:0,cd:3,end:null,done:0,pz:0,pzi:0,dirty:1,last:performance.now(),it:[],zp:[],its:4,itOn:(o.it!=null?o.it:1)===1};
  const B=FK;B.img=document.createElement('canvas');B.img.width=C;B.img.height=R;B.ix=B.img.getContext('2d');B.id=B.ix.createImageData(C,R);
  B.pl=l.map((p,i)=>{const oo=ow[tkey(p)],a=Math.PI+i*PI2/n,x=n<2?C/2|0:Math.round(C/2+Math.cos(a)*C*.34),y=n<2?R/2|0:Math.round(R/2+Math.sin(a)*R*.3);
   B.oc[oo]=pcol(p);B.og[oo]=rgb(pcol(p));square(oo,x,y,2);
