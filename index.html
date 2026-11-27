@@ -212,7 +212,7 @@ body.apmenu #tp{display:none}
 <iframe id="fl" allow="autoplay *; gamepad *"></iframe>
 <script>
 /* Texte zentral (für späteres Englisch): TX (Grundausstattung, Hinweise) + TX_UI (Menüs, Spielnamen) */
-var VER='v2026-11-27';
+var VER='v2026-11-27b';
 var TX={gfxL:'Grafik',gfx:['Auto','Niedrig','Mittel','Hoch'],hOk:'{A} OK · {B} Zurück',hPz:'{A} Wählen · {B} Weiterspielen',hcOk:'Alle drücken {A}, wenn sie die Steuerung kennen',bkYes:'Ja, zurück · {A}',bkNo:'Nein · {B}',rmA:'↻ Nochmal · {A}',rmB:'Menü · {B}',tfin:'Zurück zum Menü in ein paar Sekunden · {A}',resT:'Es geht gleich weiter…',resV:'Abstimmung: {A} = nochmal · {B} = Menü · es zählt die Mehrheit',rsq:'Wirklich neu starten? · {A}',trs:' · ◀ ▶ wählen · {A} bestätigen',boSel:'◀ ▶ wählen · {A} bestätigen · {B} ändern',boHold:'🛡 {A} halten!',
  mute:'Ton an/aus (M)',fs:'Vollbild an/aus',err:'Fehler: ',line:'Zeile ',rot:'📱 ↻<br>Bitte quer drehen',
  credits:'Ein Spiel von Arox Games · Entwickelt von Aram Simon<br><b>Arcade Party</b> '+VER+' · Musik und Soundeffekte: im Spiel erzeugt<br>Schriften: Bungee, Rajdhani (Google Fonts) · QR-Code: qrcodejs (davidshimjs) · Handy-Verbindung: PeerJS (peerjs.com)'};
@@ -253,7 +253,7 @@ Object.assign(TX_UI,{chn:['Roboter','Katze','Eule','Hase','Küken','Fuchs','Alie
  opts:{0:[{k:'diff',n:'Schwierigkeit',v:['Leicht','Normal','Schwer']},{k:'rain',n:'Regen',v:['Aus','An']}],1:[{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],2:[{k:'sp',n:'Schrumpf-Tempo',v:['Gemütlich','Normal','Hektisch']},{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],3:[{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],4:[{k:'diff',n:'Boss-Stärke',v:['Leicht','Normal','Schwer']},{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}], 5:[{k:'tl',n:'Rundenzeit',v:['60 s','90 s','120 s']},{k:'it',n:'Items',v:['Aus','An']},{k:'bots',n:'Bot-Stärke',v:['Schwach','Normal','Stark']}],11:[{k:'n',n:'Runden',v:['3 Runden','5 Runden','7 Runden']},{k:'pool',n:'Spiele',v:['Die 4 Hauptspiele','Alle Spiele']}]},
  eqN:['Schwert','Bogen','Schild'],eqD:['Nahkampf','aus der Ferne','stoßen & betäuben'],uPts:'Punkte',uSec:'Sek.',uTaps:'Taps',rnd1:'Runde',rndN:'Runden',nmPl:'Spieler',tmCol:'Teamfarbe',noTeam:'Kein Team',go:'Los!',nmBot:'Bot ',tmScore:'Team-Punktzahl: ',connecting:'Verbinde…',interim:'Zwischenstand',pt1:'Punkt',draw:'Unentschieden',drawX:'🤝 Unentschieden!',drawH:'🤝 Unentschieden',wins:' gewinnt',
  plop:'Plumps!',finish:'ZIEL',goBig:'LOS!',parry:'PARADE!',blocked:'Geblockt!',clash:'Zusammenprall!',voteA:'✔ nochmal',voteB:'✔ Menü',ready:'✔ bereit',tourWinT:'🏆 Turniersieger: ',tourWinner:'🏆 Turniersieger',winnerBig:'🏆 SIEGER!',winner:'🏆 Sieger',bossDown:'🏆 BOSS BESIEGT!',sudden:'🔥 SUDDEN DEATH!',
- fkCd:'Kreis fahren = Fläche gehört dir · Fremde Spur kreuzen = Gegner raus',fk10:'⏱ Noch 10 Sekunden!',fkSelf:'Eigene Spur!',fkNoLand:'Kein Gebiet mehr!',fkIt:['Farbbombe!','Schild!','Turbo!','Frost!'],fkLoot:'Beute! +'});
+ fkCd:'Kreis fahren = Fläche gehört dir · Fremde Spur kreuzen = Gegner raus',fk10:'⏱ Noch 10 Sekunden!',fkNoLand:'Kein Gebiet mehr!',fkIt:['Farbbombe!','Schild!','Turbo!','Frost!'],fkLoot:'Beute! +'});
 Object.assign(TX_UI,{mqJoin:'Handys: mitspielen',qrScan:'Handys: QR-Code scannen.',teamsL:'🎲 Teams',bkAll:'Alle müssen danach wieder „Bereit“ drücken.',noPts:'Noch keine Punkte. Spielt eine Runde!',noRecs:'Noch keine Rekorde. Spielt eine Runde!',hatEdit:'▲▼ ändern · ▶ weiter · ◀ zurück',free:'frei',
  aRem:'Spieler entfernen',aName:'Name',aHatN:'Hut weiter',aHatP:'Hut zurück',aChN:'Figur weiter',aChP:'Figur zurück',aCoN:'Farbe weiter',aCoP:'Farbe zurück',aTmN:'Team weiter',aTmP:'Team zurück'});
 const GAMES=TX_UI.games;
@@ -1433,8 +1433,8 @@ function itTake(q,it){const B=FK,X=px(q.x),Y=py(q.y),o=q.o;fx(px(it.x),py(it.y),
 
 function kill(q,by){const B=FK;if(!q.al)return;q.al=0;q.rt=RESP;q.sp=0;q.shd=q.tb=q.fz=0;clearTrail(q);
  fx(px(q.x),py(q.y),18,B.oc[q.o],280,.7);B.sh=Math.max(B.sh,.45);stb(q.p,'d');padBuzz(q.p);beep(cfgG.sfx,0,440);setTimeout(()=>beep(cfgG.sfx,0,220),120);
- if(by&&by!==q){stb(by.p,'k');pop(px(q.x),py(q.y)-40,'✂ '+by.p.name.slice(0,8),'#ffffff')}else pop(px(q.x),py(q.y)-40,TX_UI.fkSelf,'#ffffff');
- /* Jeder gegen jeden: Gebiet geht als Beute an den Abschneider (sonst neutral). Teams: das Team behaelt es */
+ if(by&&by!==q){stb(by.p,'k');pop(px(q.x),py(q.y)-40,'✂ '+by.p.name.slice(0,8),'#ffffff')}
+ /* Jeder gegen jeden: Gebiet geht als Beute an den Abschneider (Verbindung weg: neutral). Teams: das Team behaelt es */
  if(!B.pl.some(r=>r!==q&&r.o===q.o&&!r.gone)){const to=by&&by!==q&&by.o!==q.o?by.o:0,n=B.cnt[q.o];for(let c=0;c<B.N;c++)if(B.own[c]===q.o)B.own[c]=to;B.dirty=1;recount();
   if(to&&n/B.N>=.005){pop(px(by.x),py(by.y)-56,TX_UI.fkLoot+Math.max(1,Math.round(n/B.N*100))+' %',B.oc[to]);[523,784,1047].forEach((f,k)=>setTimeout(()=>beep(cfgG.sfx,1,f),k*70));noLand(by)}}}
 
@@ -1448,11 +1448,11 @@ function respawn(q){const B=FK,C=B.C,R=B.R;let x=-1,y=-1;
  q.x=x+.5;q.y=y+.5;q.c=y*C+x;q.a=q.ta=Math.atan2(R/2-q.y,C/2-q.x);q.ai.at=0;q.ai.wp=[];q.ai.home=0;q.ai.ta=q.a;q.al=1;q.sp=0;q.scd=0;q.inv=1;q.shd=q.tb=q.fz=0;
  fx(px(q.x),py(q.y),12,'#ffffff',180,.4);beep(cfgG.sfx,0,660)}
 
-/* Kopf betritt Zelle c. false = Spieler ist dabei rausgeflogen */
+/* Kopf betritt Zelle c (immer true; frueher false bei eigener Spur) */
 function enter(q,c){const B=FK;q.c=c;
  for(const r of B.pl)if(r!==q&&r.al&&r.o!==q.o&&r.tg[c]&&!(r.inv>0)&&!(r.shd>0))kill(r,q);
  if(B.own[c]===q.o){if(q.tr.length)capture(q);return true}
- if(q.tg[c]){if(q.tg[c]<q.ti-2){kill(q,null);return false}return true}
+ if(q.tg[c])return true; /* eigene Spur kreuzen ist erlaubt */
  q.tg[c]=++q.ti;q.tr.push(c);return true}
 
 function sprint(q){if(!q||!q.al||q.scd>0)return;q.sp=SDUR;q.scd=SCD;beep(cfgG.sfx,1,740)}
